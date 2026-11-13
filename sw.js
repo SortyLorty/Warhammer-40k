@@ -1,5 +1,5 @@
 // Codex Rapido – service worker per l'uso offline
-const CACHE = 'codex-rapido-v2';
+const CACHE = 'codex-rapido-v3';
 const CORE = ['./', './index.html', './manifest.webmanifest', './icon-192.png', './icon-512.png'];
 
 self.addEventListener('install', e => {

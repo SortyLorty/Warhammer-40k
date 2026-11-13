@@ -172,59 +172,6 @@ mark{background:color-mix(in srgb,var(--brass) 35%,transparent);color:inherit;bo
   .code{grid-row:auto}
   .grow{grid-template-columns:minmax(0,1fr) 30px minmax(0,1fr) 48px;gap:6px;font-size:14.5px}
 }
-
-/* ---------- modalità Partita ---------- */
-.gamebtn{flex:none;height:46px;border-radius:10px;border:1px solid var(--accent);background:var(--accent);color:#fff;font-weight:700;padding:0 14px;cursor:pointer;display:flex;align-items:center;gap:8px;letter-spacing:.02em}
-.gamebtn[aria-pressed="true"]{background:var(--surface);color:var(--accent)}
-.gamebtn .lbl{display:inline}
-@media (max-width:480px){ .gamebtn .lbl{display:none} .gamebtn{padding:0 12px} }
-.gbar{position:sticky;top:73px;z-index:4;background:var(--bg);padding:10px 0 12px;border-bottom:1px solid var(--line);margin-bottom:18px;display:grid;gap:10px}
-.gsel{display:flex;gap:8px;align-items:center}
-.gsel select{flex:1 1 0;width:0;min-width:0;height:48px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--ink);font:inherit;font-size:17px;font-weight:600;padding:0 12px}
-.gsel button{width:48px;height:48px;flex:none;border-radius:10px;border:1px solid var(--line);background:var(--surface);cursor:pointer;font-size:20px}
-.hud{display:flex;gap:8px;flex-wrap:wrap}
-.ctr{display:flex;align-items:center;background:var(--surface);border:1px solid var(--line);border-radius:10px;overflow:hidden}
-.ctr span{padding:0 10px;font-size:13px;color:var(--muted)}
-.ctr b{min-width:28px;text-align:center;font-size:18px;font-variant-numeric:tabular-nums}
-.ctr button{width:40px;height:40px;border:0;background:none;cursor:pointer;font-size:20px;color:var(--accent)}
-.ctr button:hover{background:var(--bg)}
-.hud .reset{border:1px solid var(--line);background:none;border-radius:10px;padding:0 12px;cursor:pointer;color:var(--muted);font-size:13px}
-.phasehead{display:flex;align-items:center;gap:12px;margin-bottom:4px}
-.phasehead .num{width:40px;height:40px;border-radius:50%;background:var(--turn);color:#fff;font-family:var(--font-display);font-weight:700;font-size:20px;display:flex;align-items:center;justify-content:center;flex:none}
-.phasehead h2{font-family:var(--font-display);font-size:clamp(22px,3.2vw,30px);margin:0}
-.turnpill{display:inline-block;font-size:12px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:var(--turn);margin-bottom:4px}
-.steps{list-style:none;margin:10px 0 0;padding:0;display:grid;gap:8px}
-.steps>li{background:var(--surface);border:1px solid var(--line);border-left:4px solid var(--turn);border-radius:10px;padding:10px 14px;font-size:16px}
-.steps ul{margin:6px 0 0;padding-left:18px;color:var(--ink)}
-.steps ul li{margin:3px 0;font-size:15px}
-.ok{color:#2e8b57;font-weight:700}
-.no{color:var(--accent);font-weight:700}
-.det{margin-top:18px;border:1px dashed var(--brass);border-radius:12px;padding:12px 14px;background:color-mix(in srgb,var(--brass) 7%,var(--surface))}
-.det h4{margin:0 0 8px;font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--brass)}
-.det p{margin:6px 0;font-size:15.5px}
-.st{display:inline-flex;align-items:center;gap:6px;font-weight:700;white-space:nowrap}
-.st i{width:10px;height:10px;border-radius:2px;display:inline-block}
-.st-b i{background:#3a6fd8}.st-r i{background:#d23b32}.st-g i{background:#2e9b5f}
-.st em{font-style:normal;font-weight:600;color:var(--muted);font-size:13px}
-.legend{display:flex;gap:14px;flex-wrap:wrap;font-size:13px;color:var(--muted);margin:8px 0 0}
-.gtbl{width:100%;border-collapse:collapse;background:var(--surface);border:1px solid var(--line);border-radius:12px;overflow:hidden;font-size:15px}
-.gtbl th{text-align:left;font-size:12px;letter-spacing:.1em;text-transform:uppercase;color:var(--muted);padding:10px 12px;border-bottom:1px solid var(--line)}
-.gtbl td{padding:10px 12px;border-bottom:1px solid var(--line);vertical-align:top}
-.gtbl td:first-child{font-weight:700;white-space:nowrap}
-.gtwrap{overflow-x:auto;margin-top:8px}
-.dets{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px;margin-top:10px}
-.dcard{background:var(--surface);border:1px solid var(--line);border-top:4px solid var(--brass);border-radius:12px;padding:12px 14px}
-.dcard h3{margin:0 0 6px;font-size:18px}
-.dcard .lab{font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);margin:10px 0 4px}
-.dcard p{margin:4px 0;font-size:15px}
-.once{display:grid;gap:8px;margin-top:8px}
-.once label{display:flex;align-items:center;gap:12px;background:var(--surface);border:1px solid var(--line);border-radius:10px;padding:10px 14px;cursor:pointer;font-size:16px}
-.once input{width:22px;height:22px;accent-color:var(--accent)}
-.once label.used span{text-decoration:line-through;color:var(--muted)}
-.gnote{font-size:13.5px;color:var(--muted);margin-top:14px}
-.listline{color:var(--muted);margin:2px 0 0}
-@media (max-width:860px){ .gbar{top:71px} }
-
 @media (prefers-reduced-motion: reduce){ .side{transition:none} }
 </style>
 </head>
@@ -256,10 +203,6 @@ mark{background:color-mix(in srgb,var(--brass) 35%,transparent);color:inherit;bo
         <input id="q" type="search" autocomplete="off" placeholder="Cerca in italiano o inglese… es. colpi letali, cover, 2D6" aria-label="Cerca una regola">
         <button class="clear" id="clear" aria-label="Cancella ricerca">×</button>
       </div>
-      <button class="gamebtn" id="gamebtn" data-go="partita" aria-pressed="false" aria-label="Apri la modalità Partita">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14.5 17.5L3 6V3h3l11.5 11.5"/><path d="M13 19l6-6"/><path d="M16 16l4 4"/><path d="M19 21l2-2"/></svg>
-        <span class="lbl">Partita</span>
-      </button>
     </div>
     <div class="content" id="content"></div>
   </main>
@@ -430,192 +373,6 @@ const EXTRA_GLOSS = [
  ['Grenade','Granata','S4'],['Incursion (1000 pts)','Incursione*','D2'],['Strike Force (2000 pts)','Forza d’Attacco*','D2'],['Battle-shocked','Traumatizzato','C3'],
 ];
 
-
-/* ======================= PARTITA: DARK ANGELS ======================= */
-/* Contenuti dalla guida personale "Dark Angels · Schema di gioco 11ª edizione". Riassunti: fa fede l'app. */
-const ST = {
-  fa:['Forza Annientatrice','1PC','g'], sp:['Spinta Purificatrice','1PC','b'], ic:['Impatto Corazzato','1PC','b'],
-  vs:['Veterani Spietati','1PC','b'], tt:['Tempra dell’Armatura Terminator','2PC','g'], ec:['Estrazione via Cannoniera','1PC','r'],
-};
-const st = k => { const [n,c,t]=ST[k]; return `<span class="st st-${t}"><i></i>${n} <em>(${c})</em></span>`; };
-const OK='<span class="ok">✓</span>', NO='<span class="no">✗</span>';
-
-const GAME = {
-  army:'Dark Angels', dets:'Gravis Linebreaker Force + Terminator Storm Force',
-  list:'Capitano in Armatura Terminator (generale) + 5 Deathwing Knights · Brutalis · 5 Hellblasters · 3 Inceptors · 2×5 Heavy Intercessors · 1000 punti',
-  once:[['dAss','Dottrina d’Assalto'],['dTat','Dottrina Tattica'],['dDev','Dottrina di Devastazione'],['wid','Watcher in the Dark (Knights)']],
-  phases:[
-   {id:'armata',label:'La mia armata',group:'Prima della partita'},
-   {id:'p1',n:1,label:'Comando',group:'Il tuo turno',turn:'mine',steps:[
-     `Risolvi le abilità che dicono «all'inizio della fase di Comando».`,
-     `Entrambi i giocatori guadagnano <b>+1 PC</b>.`,
-     `<b>+1 PC extra</b> a inizio round [Stratega Transumano] se il tuo generale ha questa abilità (vale una volta sola).`,
-     [`[Dottrine di Combattimento] puoi scegliere una dottrina, attiva per tutte le tue unità fino all'inizio del tuo prossimo Comando:`,
-       [`<b>Assalto</b>: un'unità che avanza ${OK} può comunque caricare.`,`<b>Devastazione</b>: tutte le armi da tiro hanno [ASSALTO] → ${OK} sparano anche dopo un'avanzata.`,`<b>Tattica</b>: un'unità che ripiega ${OK} può comunque sparare e caricare.`,`Ogni dottrina si sceglie <b>una volta per battaglia</b> (spuntala qui sotto).`]],
-     `<b>Acume Strategico</b> (Capitano): puoi attivare una dottrina solo per la sua unità, in aggiunta a quella scelta per l'esercito. Controlla nell'app se conta come uso della dottrina.`,
-     [`Test di Shock {C3} per ogni unità ridotta a metà forza o meno (o già in Shock): 2D6, passa con un risultato ≥ Ld.`,
-       [`Se fallisce, fino al tuo prossimo Comando: ${NO} OC 0 (non tiene obiettivi) · ${NO} niente stratagemmi su di lei · ${NO} non può iniziare azioni.`,`Se deve ripiegare, lo fa in fuga disordinata (vedi Movimento).`]],
-    ],det:[`Nessuno stratagemma del detachment. La dottrina che scegli qui decide cosa possono fare le unità nelle fasi successive.`],showOnce:true},
-   {id:'p2',n:2,label:'Movimento',group:'Il tuo turno',turn:'mine',steps:[
-     [`Per ogni unità scegli un movimento:`,[
-       `<b>Normale</b> (fino a M"): ${OK} può sparare e caricare.`,
-       `<b>Avanzata</b> (M + D6"): ${NO} non può caricare (tranne con Assalto) · ${NO} spara solo con armi [ASSALTO] (con Devastazione: tutte) · ${NO} non può iniziare azioni.`,
-       `<b>Ripiegamento</b> (fino a M", solo se ingaggiata): ${NO} non può sparare né caricare (tranne con Tattica) · ${NO} non può iniziare azioni.`,
-       `<b>Ripiegamento in Shock</b> (fuga disordinata): tiro di pericolo {C13} per ogni modello (1-2 = 1 ferita mortale), può attraversare i nemici, poi fa un test di Shock.`,
-       `<b>Ferma</b>: ${OK} nessuna limitazione.`]],
-     [`Unità ingaggiata (entro 2" da un nemico):`,[`${NO} niente movimento normale né avanzata: può solo ripiegare o restare ferma.`]],
-     `Muovendo non puoi arrivare entro 2" da un nemico: ci arrivi solo caricando.`,
-     `Le unità con Deep Strike {U3} (Capitano, Knights, Inceptors) possono partire in riserva.`,
-     [`<b>Rinforzi</b> (dal round 2): le unità in riserva entrano dove vuoi, a più di 8" da tutti i nemici.`,[
-       `Dopo: ${NO} nessun altro movimento in questo turno · ${OK} possono sparare e caricare (da 9" serve un 9 su 2D6).`,
-       `${NO} Un'unità entrata in questo turno non può salire su un trasporto.`]],
-    ],det:[
-     `[Fortezza Ambulante] un'unità GRAVIS che fa un movimento normale avrà +1 per colpire al tiro. ${NO} Un'avanzata non lo attiva. Se resta ferma niente bonus, ma conserva l'effetto delle armi [PESANTE] (vedi scheda).`,
-     `Le unità rimesse in riserva con ${st('ec')} rientrano qui come rinforzi.`]},
-   {id:'p3',n:3,label:'Tiro',group:'Il tuo turno',turn:'mine',steps:[
-     `Scegli un'unità alla volta.`,
-     [`Dichiara i bersagli: devono essere visibili e in gittata.`,[`Armi diverse dello stesso modello possono avere bersagli diversi; una singola arma no.`]],
-     `<b>Plasma in supercarica</b> (Hellblasters, Inceptors): profilo più forte, ma l'arma diventa Pericolosa {A8}.`,
-     `[Fortezza Ambulante] Heavy Intercessors e Inceptors che hanno fatto un movimento normale: <b>+1 per colpire</b> e armi senza [PESANTE].`,
-     [`Risolvi gli attacchi (vedi “Come si risolve un attacco”).`,[`Bersaglio in copertura: la tua AB peggiora di 1 {C9}.`,`Armi Pericolose: dopo aver sparato, tiro di pericolo (1-2 = 1 ferita mortale, 3 se veicolo o mostro).`]],
-     [`Unità ingaggiata:`,[`${NO} spara solo con armi [PISTOLA]/ravvicinate e solo contro chi è ingaggiato con lei.`,`Veicoli e mostri ingaggiati possono sparare, con −1 per colpire.`]],
-     [`Dopo aver sparato:`,[`${OK} l'unità può ancora caricare, anche un nemico diverso da quello colpito.`,`${NO} un'unità che ha iniziato un'azione non può sparare né caricare; se si muove, l'azione fallisce.`]],
-    ],det:[
-     `${st('fa')} quando scegli un'unità GRAVIS per sparare: Colpi Letali.`,
-     `${st('sp')} dopo che un'unità GRAVIS ha sparato: +5" verso un obiettivo (poi niente carica). Utile solo se ci sono obiettivi.`,
-     `${st('vs')} quando scegli un'unità TERMINATOR per sparare (in pratica la combiarma del Capitano): Colpi Letali e Sostenuti 1.`]},
-   {id:'p4',n:4,label:'Carica',group:'Il tuo turno',turn:'mine',steps:[
-     [`Dichiara i bersagli (entro 12"), poi tira 2D6: è la distanza massima.`,[
-       `[Ultimo Colpo] le unità TERMINATOR (Capitano e Knights) aggiungono <b>+1</b> al tiro di carica.`,
-       `<b>Valore Inarrestabile</b> (Capitano): la sua unità può ritirare il tiro di carica, senza spendere PC. Il +1 si applica anche al ritiro.`,
-       `<b>Brutalis Charge</b>: lo stratagemma Impatto Devastante {S5} usato sul Brutalis costa 1 PC in meno.`]],
-     [`La carica riesce solo se:`,[`ogni modello si avvicina ai bersagli e finisce entro 2" (ingaggiato), se può;`,`l'unità finisce ingaggiata con tutti i bersagli dichiarati · ${NO} e con nessun'altra unità nemica.`]],
-     [`${NO} Non può caricare un'unità che in questo turno:`,[`ha avanzato (tranne con Assalto);`,`è ripiegata (tranne con Tattica);`,`ha iniziato un'azione.`]],
-     `Chi carica ottiene <b>Combatte per primo</b> {U5} nella fase di Combattimento.`,
-    ],det:[
-     `Il bonus +1 di Ultimo Colpo è automatico: ricordati di aggiungerlo al tiro.`,
-     `${st('ic')} quando un'unità GRAVIS finisce una carica: D6 per modello ingaggiato, ogni 3+ = 1 ferita mortale.`]},
-   {id:'p5',n:5,label:'Combattimento',group:'Il tuo turno',turn:'mine',steps:[
-     `<b>Ammassarsi</b>: ogni unità ingaggiata (prima le tue) si avvicina di 3" al nemico.`,
-     [`Ordine dei combattimenti:`,[`prima le unità con Combatte per primo (chi ha caricato), a turno, iniziando da te;`,`poi tutte le altre unità ingaggiate, anche quelle nemiche, sempre a turno;`,`${NO} un modello ucciso prima di aver combattuto non attacca.`]],
-     `[Champion of the First Company] l'unità del Capitano ha Colpi Letali {A13} in mischia: ogni 6 per colpire ferisce in automatico.`,
-     [`<b>Consolidamento</b>: chi ha combattuto si muove di 3" verso il nemico.`,[`Se così ingaggia un'unità nemica nuova che non ha ancora combattuto, è quella la prossima a combattere.`]],
-    ],det:[
-     `${st('fa')} quando scegli un'unità GRAVIS per combattere: Colpi Letali in mischia.`,
-     `Quando un nemico ingaggiato bersaglia un'unità TERMINATOR: ${st('tt')} (−1 Danno). Sui Knights non si somma a Inner Circle: serve solo al Capitano rimasto da solo.`]},
-   {id:'opp',label:'Turno avversario',group:'Turno avversario',turn:'opp',steps:[
-     `<b>Comando</b>: anche tu guadagni +1 PC.`,
-     [`<b>Movimento, Tiro, Carica</b>: puoi usare gli stratagemmi rossi e verdi della fase in corso.`,[`Quando ti colpiscono tiri tu le salvezze. I Knights applicano Inner Circle (−1 al Danno di ogni attacco).`,`${NO} Un'unità che spara con Fuoco di Copertura {S7} non può iniziare azioni fino a fine fase.`]],
-     [`<b>Combattimento</b>: le tue unità ingaggiate combattono anche nel suo turno, alternandosi con le sue.`,[`Lui combatte per primo solo con le unità che hanno caricato.`]],
-    ],det:[
-     `<b>Movimento</b>: nessuno stratagemma del detachment (solo quelli base, nell'app).`,
-     `<b>Tiro</b>, quando bersaglia un'unità TERMINATOR: ${st('tt')} −1 Danno (solo il Capitano rimasto da solo).`,
-     `<b>Carica</b>: nessuno stratagemma del detachment.`,
-     `<b>Combattimento</b>: ${st('fa')} su un'unità GRAVIS che combatte · ${st('tt')} su un'unità TERMINATOR bersagliata.`,
-     `<b>Fine del Combattimento</b>: ${st('ec')} un'unità TERMINATOR non ingaggiata torna in riserva.`]},
-   {id:'unita',label:'Abilità delle mie unità',group:'Consultazione'},
-   {id:'attacco',label:'Come si risolve un attacco',group:'Consultazione'},
-  ],
-  units:[
-   ['Deathwing Knights','<b>Inner Circle</b>: ogni attacco che li colpisce ha −1 al Danno. Invulnerabile 4+. Deep Strike. <b>Watcher in the Dark</b>: una volta per partita, appena l’unità riceve una ferita mortale, ha Feel No Pain 4+ contro le ferite mortali fino a fine fase.'],
-   ['Capitano in Armatura Terminator (generale)','Invulnerabile 4+, Deep Strike, guida i Knights. Relic Fist + combiarma (a ogni tiro scegli un profilo: Infernus, Purgatus o Damnatus). <b>Valore Inarrestabile</b>: ritira la carica. <b>Acume Strategico</b>: nel tuo Comando può attivare una dottrina solo per la sua unità. <b>Champion of the First Company</b>: Colpi Letali in mischia per tutta l’unità. <b>Stratega Transumano</b>.'],
-   ['Brutalis','<b>Brutalis Charge</b>: Impatto Devastante costa 1 PC in meno. <b>Danneggiato</b>: sotto una soglia di ferite peggiora (vedi scheda). <b>Esplosione</b>: quando è distrutto può infliggere ferite mortali intorno.'],
-   ['Inceptors','Deep Strike. Plasma in supercarica = Pericoloso.'],
-   ['Hellblasters','Plasma in supercarica = Pericoloso.'],
-  ],
-  detCards:[
-   {n:'Gravis Linebreaker Force',rule:'<b>Fortezza Ambulante</b>: nel turno in cui un’unità GRAVIS (Heavy Intercessors, Inceptors) ha fatto un movimento normale, le sue armi da tiro perdono [PESANTE] e hanno +1 per colpire.',
-    strats:[['fa','tua fase di Tiro o una fase di Combattimento: gli attacchi di un’unità GRAVIS hanno Colpi Letali.'],['sp','dopo che un’unità GRAVIS ha sparato: si muove fino a 5" e deve finire su un obiettivo; poi non può caricare.'],['ic','quando un’unità GRAVIS finisce una carica: D6 per modello ingaggiato, ogni 3+ = 1 ferita mortale al nemico.']],
-    enh:'Indefatigable Fortitude, Relentless Advance (solo personaggi GRAVIS: non li usi).'},
-   {n:'Terminator Storm Force',rule:'<b>Ultimo Colpo</b>: le tue unità TERMINATOR (Capitano e Knights) hanno +1 ai tiri di carica.',
-    strats:[['vs','le armi da tiro di un’unità TERMINATOR hanno Colpi Letali e Colpi Sostenuti 1.'],['tt','gli attacchi contro un’unità TERMINATOR hanno −1 al Danno. Non si somma a Inner Circle dei Knights.'],['ec','a fine fase di Combattimento avversaria, un’unità TERMINATOR non ingaggiata torna in riserva.']],
-    enh:'Champion of the First Company, Corporeum Reliquary. <b>Il tuo:</b> Champion of the First Company (20 pt) sul Capitano: la sua unità ha Colpi Letali in mischia.'},
-  ],
-  rules:[`<b>Riserve</b>: al massimo metà dei punti. Un'unità non ancora entrata a fine round 3 è distrutta {C18}.`,`<b>Coesione</b>: a fine turno ogni modello deve essere entro 2" da un altro della sua unità {C2}.`,`<b>Personaggi aggregati</b>: i colpi vanno prima sulle guardie del corpo; il personaggio si colpisce per ultimo, tranne con Precision {A17}.`],
-};
-
-/* stato partita (solo su questo dispositivo) */
-let G = {phase:'armata', cp:0, round:1, once:{}};
-try{ Object.assign(G, JSON.parse(localStorage.getItem('cr40k-game')||'{}')); }catch(_){}
-const saveG = ()=>{ try{ localStorage.setItem('cr40k-game',JSON.stringify(G)); }catch(_){} };
-
-function stepsHTML(arr){
-  return `<ul class="steps">${arr.map(x=> Array.isArray(x)
-    ? `<li>${refs(x[0])}<ul>${x[1].map(y=>`<li>${refs(y)}</li>`).join('')}</ul></li>`
-    : `<li>${refs(x)}</li>`).join('')}</ul>`;
-}
-const legend = `<div class="legend"><span class="st st-b"><i></i>tuo turno</span><span class="st st-r"><i></i>turno avversario</span><span class="st st-g"><i></i>entrambi</span></div>`;
-function onceHTML(){
-  return `<div class="related"><h4>Una volta per partita</h4><div class="once">${GAME.once.map(([k,l])=>`<label class="${G.once[k]?'used':''}"><input type="checkbox" data-once="${k}" ${G.once[k]?'checked':''}><span>${l}</span></label>`).join('')}</div></div>`;
-}
-function renderGame(){
-  renderNav('');
-  const ph = GAME.phases.find(p=>p.id===G.phase) || GAME.phases[0];
-  const idx = GAME.phases.indexOf(ph);
-  let groups = {}; GAME.phases.forEach(p=>{ (groups[p.group]=groups[p.group]||[]).push(p); });
-  const opts = Object.entries(groups).map(([g,ps])=>`<optgroup label="${g}">${ps.map(p=>`<option value="${p.id}" ${p.id===ph.id?'selected':''}>${p.n?p.n+'. ':''}${p.label}</option>`).join('')}</optgroup>`).join('');
-  let html = `<div class="gbar">
-    <div class="gsel">
-      <button data-gstep="-1" aria-label="Fase precedente" ${idx===0?'disabled':''}>‹</button>
-      <select id="gphase" aria-label="Scegli la fase">${opts}</select>
-      <button data-gstep="1" aria-label="Fase successiva" ${idx===GAME.phases.length-1?'disabled':''}>›</button>
-    </div>
-    <div class="hud">
-      <div class="ctr"><span>Round</span><button data-gc="round" data-d="-1" aria-label="Round meno">−</button><b>${G.round}</b><button data-gc="round" data-d="1" aria-label="Round più">+</button></div>
-      <div class="ctr"><span>PC</span><button data-gc="cp" data-d="-1" aria-label="PC meno">−</button><b>${G.cp}</b><button data-gc="cp" data-d="1" aria-label="PC più">+</button></div>
-      <button class="reset" data-greset="1">Nuova partita</button>
-    </div>
-  </div>`;
-  const turnCol = ph.turn==='opp' ? '#d23b32' : ph.turn==='mine' ? '#3a6fd8' : 'var(--brass)';
-  html += `<div style="--turn:${turnCol}">`;
-  if(ph.id==='armata'){
-    html += `<div class="sechead"><h2>${GAME.army}</h2><span class="en">${GAME.dets}</span></div><div class="rule" style="background:var(--brass)"></div>
-      <p class="listline">${GAME.list}</p>
-      <div class="dets">${GAME.detCards.map(d=>`<div class="dcard"><h3>${d.n}</h3>
-        <div class="lab">Regola sempre attiva</div><p>${d.rule}</p>
-        <div class="lab">Stratagemmi</div>${d.strats.map(([k,t])=>`<p>${st(k)} ${t}</p>`).join('')}
-        <div class="lab">Potenziamenti</div><p>${d.enh}</p></div>`).join('')}</div>
-      ${legend}
-      <p class="gnote">${refs("Ogni stratagemma si usa al massimo una volta per fase; ogni unità ne riceve al massimo uno per fase {D1}. I nomi italiani e i tempi esatti degli stratagemmi possono differire nell'app: controlla lì.")}</p>
-      <div class="related"><h4>Regole utili</h4>${stepsHTML(GAME.rules)}</div>
-      ${onceHTML()}`;
-  } else if(ph.id==='unita'){
-    html += `<div class="sechead"><h2>Abilità delle mie unità</h2></div><div class="rule" style="background:var(--brass)"></div>
-      <div class="gtwrap"><table class="gtbl"><thead><tr><th>Unità</th><th>Abilità</th></tr></thead><tbody>${GAME.units.map(([u,a])=>`<tr><td>${u}</td><td>${a}</td></tr>`).join('')}</tbody></table></div>
-      <p class="gnote">Riassunti: per i testi esatti vale la scheda nell'app.</p>`;
-  } else if(ph.id==='attacco'){
-    const rows=[['1. Colpire','Chi attacca','D6 per ogni attacco: serve ≥ AB (tiro) o AC (mischia). Un 1 fallisce sempre, un 6 naturale è un colpo critico {C5}.'],
-      ['2. Ferire','Chi attacca','Confronta Forza dell’arma e Resistenza del bersaglio (tabella sotto). Un 6 naturale è una ferita critica.'],
-      ['3. Salvezza','Chi difende','D6 meno l’AP contro la Sv, oppure l’invulnerabile, che ignora l’AP. Un 1 fallisce sempre.'],
-      ['4. Danno','Chi difende','Il modello perde ferite pari al Danno. L’eccesso si perde, non passa al modello successivo.']];
-    html += `<div class="sechead"><h2>Come si risolve un attacco</h2><span class="en">vale per tutti</span></div><div class="rule" style="background:var(--brass)"></div>
-      <div class="gtwrap"><table class="gtbl"><thead><tr><th>Passo</th><th>Chi tira</th><th>Cosa fare</th></tr></thead><tbody>${rows.map(r=>`<tr><td>${r[0]}</td><td>${r[1]}</td><td>${refs(r[2])}</td></tr>`).join('')}</tbody></table></div>
-      ${calcHTML()}
-      <div class="related"><h4>Parole chiave che usi di più</h4><div class="chips">${['A13','A20','A6','A17','A1','A14','A8','C8','U4'].map(chip).join('')}</div></div>`;
-  } else {
-    html += `<span class="turnpill">${ph.turn==='opp'?'Turno avversario':'Il tuo turno · fase '+ph.n+' di 5'}</span>
-      <div class="phasehead">${ph.n?`<span class="num">${ph.n}</span>`:''}<h2>${ph.label}</h2></div>
-      ${stepsHTML(ph.steps)}
-      <div class="det"><h4>+ Puoi aggiungere dal detachment</h4>${ph.det.map(d=>`<p>› ${refs(d)}</p>`).join('')}${legend}</div>
-      ${ph.showOnce?onceHTML():''}`;
-  }
-  html += `</div>`;
-  content.innerHTML = html;
-  if(ph.id==='attacco') wireCalc();
-  $('#gphase').addEventListener('change',e=>{ G.phase=e.target.value; saveG(); renderGame(); $('#main').scrollTop=0; });
-}
-document.addEventListener('click',ev=>{
-  const t = ev.target.closest('[data-gstep],[data-gc],[data-greset]'); if(!t) return;
-  if(t.dataset.gstep){ const i=GAME.phases.findIndex(p=>p.id===G.phase)+ +t.dataset.gstep; if(GAME.phases[i]){ G.phase=GAME.phases[i].id; if(G.phase==='p1'&&+t.dataset.gstep>0&&i>0){} } }
-  if(t.dataset.gc){ const k=t.dataset.gc; G[k]=Math.max(k==='round'?1:0, Math.min(k==='round'?5:99, G[k]+ +t.dataset.d)); }
-  if(t.dataset.greset){ G={phase:'armata',cp:0,round:1,once:{}}; }
-  saveG(); renderGame(); if(t.dataset.gstep) $('#main').scrollTop=0;
-});
-document.addEventListener('change',ev=>{
-  const t=ev.target; if(!t.dataset||!t.dataset.once) return;
-  G.once[t.dataset.once]=t.checked; saveG(); t.closest('label').classList.toggle('used',t.checked);
-});
-
 /* ======================= LOGICA ======================= */
 const byId = Object.fromEntries(E.map(e=>[e.id,e]));
 const $ = s=>document.querySelector(s);
@@ -701,8 +458,7 @@ function renderHome(){
   content.innerHTML = `<div class="sechead"><h2>Codex Rapido</h2><span class="en">Warhammer 40,000 · 11th edition</span></div>
   <div class="rule" style="background:var(--brass)"></div>
   <p class="intro">Cerca qualsiasi regola in italiano o in inglese con la barra in alto, oppure apri una sezione. I nomi sottolineati dentro le schede si aprono al tocco, così controlli una keyword senza perdere il segno.</p>
-  <button class="tile" data-go="partita" style="--tc:var(--accent);margin-bottom:6px;width:100%"><b>Modalità Partita · Dark Angels</b><span>Fase per fase con i tuoi stratagemmi, PC, round e regole “una volta per partita”.</span></button>
-  <div class="related"><h4>Le novità 11ª da ricordare</h4><div class="chips">${['C9','C10','C1','C2','D1','A9','C14','D2'].map(chip).join('')}</div></div>
+  <div class="related" style="margin-top:0"><h4>Le novità 11ª da ricordare</h4><div class="chips">${['C9','C10','C1','C2','D1','A9','C14','D2'].map(chip).join('')}</div></div>
   <div class="related"><h4>Sezioni</h4><div class="tiles">${tiles}</div></div>
   <p class="note">Le descrizioni sono riassunti scritti per la consultazione veloce, non il testo ufficiale: in caso di dubbio fanno fede le Core Rules gratuite e l'app Warhammer 40,000. I termini italiani con <b style="color:var(--brass)">*</b> sono traduzioni non ufficiali. Abbreviazioni: PC = Punti Comando · AB/AC = Abilità Balistica / di Combattimento · Fo = Forza · R = Resistenza · VP = Valore di Penetrazione · Sv = Salvezza · Cd = Disciplina · OC = Controllo Obiettivo.</p>`;
 }
@@ -791,8 +547,6 @@ function closeSheet(){ document.body.classList.remove('open'); }
 /* routing */
 function route(){
   const h = location.hash.replace('#','');
-  const gb = document.getElementById('gamebtn'); if(gb) gb.setAttribute('aria-pressed', h==='partita');
-  if(h==='partita') return renderGame();
   renderSection(SECS.some(s=>s.id===h)?h:'home');
 }
 function go(id, flash){
