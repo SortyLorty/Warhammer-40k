@@ -1,0 +1,597 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Codex Rapido 40k</title>
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Codex Rapido">
+<meta name="theme-color" content="#22232a">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@600;700&family=IBM+Plex+Sans+Condensed:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<style>
+/* Layout: drawer laterale fisso su tablet/desktop, a scomparsa su telefono; contenuto a schede; ricerca sempre in alto. */
+:root{
+  --bg:#f3f1ec;
+  --surface:#ffffff;
+  --ink:#1c1d22;
+  --muted:#626674;
+  --line:#dcd8cf;
+  --accent:#9a2a22;      /* rosso cremisi */
+  --brass:#a07a2c;       /* ottone */
+  --chip-ink:#ffffff;
+  --side:#22232a;
+  --side-ink:#e9e6df;
+  --side-muted:#9a9cab;
+  --novel:#1f6f5c;
+  --font-display:"Cinzel", "Trajan Pro", Georgia, serif;
+  --font-body:"IBM Plex Sans Condensed", "Arial Narrow", system-ui, sans-serif;
+  --c-T:#2f4b7c; --c-C:#3d6b5a; --c-A:#8a2c2c; --c-U:#7a5a1e; --c-K:#5b3f7a; --c-S:#1f6f86; --c-D:#555b66;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark){
+  :root:not([data-theme="light"]){
+    --bg:#15161a; --surface:#1e1f25; --ink:#ecebe6; --muted:#a3a5b1; --line:#30323b;
+    --accent:#e0675c; --brass:#d2ac5c; --side:#101115; --side-ink:#e9e6df; --side-muted:#8e909c; --novel:#4fbf9f;
+    --c-T:#4d6fae; --c-C:#4f8a74; --c-A:#b04444; --c-U:#a07a2e; --c-K:#7d5ca3; --c-S:#2c8ba6; --c-D:#6c7381;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#15161a; --surface:#1e1f25; --ink:#ecebe6; --muted:#a3a5b1; --line:#30323b;
+  --accent:#e0675c; --brass:#d2ac5c; --side:#101115; --side-ink:#e9e6df; --side-muted:#8e909c; --novel:#4fbf9f;
+  --c-T:#4d6fae; --c-C:#4f8a74; --c-A:#b04444; --c-U:#a07a2e; --c-K:#7d5ca3; --c-S:#2c8ba6; --c-D:#6c7381;
+  color-scheme: dark;
+}
+*{box-sizing:border-box}
+html,body{height:100%;margin:0}
+body{background:var(--bg);color:var(--ink);font-family:var(--font-body);font-size:16px;line-height:1.5;-webkit-text-size-adjust:100%}
+button{font:inherit;color:inherit}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--brass);outline-offset:2px}
+
+.app{display:grid;grid-template-columns:280px 1fr;height:100%}
+/* ---------- sidebar ---------- */
+.side{background:var(--side);color:var(--side-ink);overflow-y:auto;padding:calc(18px + env(safe-area-inset-top)) 0 calc(24px + env(safe-area-inset-bottom));display:flex;flex-direction:column;gap:4px}
+.brand{padding:0 20px 14px;border-bottom:1px solid #ffffff14;margin-bottom:8px}
+.brand h1{font-family:var(--font-display);font-size:20px;letter-spacing:.06em;margin:0;line-height:1.2}
+.brand p{margin:4px 0 0;font-size:13px;color:var(--side-muted)}
+.navgroup{padding:10px 20px 4px;font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--side-muted)}
+.nav button{display:flex;align-items:center;gap:12px;width:100%;text-align:left;background:none;border:0;padding:9px 20px;font-size:15.5px;cursor:pointer;color:var(--side-ink);border-left:3px solid transparent}
+.nav button:hover{background:#ffffff0d}
+.nav button[aria-current="true"]{background:#ffffff14;border-left-color:var(--brass)}
+.nav .dot{width:10px;height:10px;border-radius:2px;flex:none}
+.nav .count{margin-left:auto;font-size:12px;color:var(--side-muted);font-variant-numeric:tabular-nums}
+.side-foot{margin-top:auto;padding:16px 20px 0;font-size:12px;color:var(--side-muted);border-top:1px solid #ffffff14}
+.themebtns{display:flex;gap:6px;margin-top:8px}
+.themebtns button{flex:1;background:#ffffff10;border:1px solid #ffffff1c;border-radius:6px;padding:6px 0;color:var(--side-ink);cursor:pointer;font-size:13px}
+.themebtns button[aria-pressed="true"]{border-color:var(--brass);color:var(--brass)}
+
+/* ---------- main ---------- */
+.main{overflow-y:auto;height:100%;position:relative}
+.topbar{position:sticky;top:0;z-index:5;background:var(--bg);padding:calc(14px + env(safe-area-inset-top)) clamp(16px,4vw,40px) 12px;border-bottom:1px solid var(--line);display:flex;gap:10px;align-items:center}
+.menubtn{display:none;background:var(--surface);border:1px solid var(--line);border-radius:8px;width:44px;height:44px;flex:none;cursor:pointer;align-items:center;justify-content:center}
+.search{flex:1;position:relative}
+.search input{width:100%;height:46px;border-radius:10px;border:1px solid var(--line);background:var(--surface);color:var(--ink);padding:0 44px 0 42px;font:inherit;font-size:17px}
+.search input::placeholder{color:var(--muted)}
+.search svg{position:absolute;left:13px;top:13px;color:var(--muted)}
+.search .clear{position:absolute;right:6px;top:6px;width:34px;height:34px;border:0;background:none;cursor:pointer;color:var(--muted);font-size:20px;display:none}
+.content{padding:22px clamp(16px,4vw,40px) calc(60px + env(safe-area-inset-bottom));max-width:980px}
+.sechead{display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap;margin-bottom:6px}
+.sechead h2{font-family:var(--font-display);font-size:clamp(24px,3.4vw,32px);margin:0;letter-spacing:.03em;text-wrap:balance}
+.sechead .en{color:var(--muted);font-style:italic;font-size:15px}
+.intro{color:var(--muted);margin:4px 0 18px;max-width:68ch}
+.rule{height:3px;border-radius:2px;margin:10px 0 18px;width:72px}
+
+.cards{display:grid;gap:12px}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px 16px 14px 16px;display:grid;grid-template-columns:auto 1fr auto;gap:4px 14px;align-items:start;scroll-margin-top:90px}
+.card.flash{box-shadow:0 0 0 2px var(--brass)}
+.code{grid-row:1 / span 3;min-width:42px;height:28px;padding:0 6px;border-radius:6px;color:var(--chip-ink);font-weight:700;font-size:13px;display:flex;align-items:center;justify-content:center;font-variant-numeric:tabular-nums;margin-top:2px}
+.card h3{margin:0;font-size:18px;line-height:1.25;font-weight:700;letter-spacing:.01em}
+.card .it{color:var(--muted);font-style:italic;font-size:15px}
+.card .it .unoff{font-style:normal;color:var(--brass);font-weight:600;margin-left:2px}
+.card .body{grid-column:2 / span 2;font-size:15.5px;max-width:72ch}
+.card .body p{margin:6px 0 0}
+.card .body ul{margin:6px 0 0;padding-left:20px}
+.card .body li{margin:2px 0}
+.star{background:none;border:0;cursor:pointer;width:36px;height:36px;margin:-6px -8px 0 0;color:var(--muted);font-size:20px;line-height:1}
+.star[aria-pressed="true"]{color:var(--brass)}
+.badge{display:inline-block;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--novel);border:1px solid currentColor;border-radius:4px;padding:0 5px;margin-left:8px;vertical-align:2px;font-style:normal}
+.ref{border:0;background:none;padding:0 1px;cursor:pointer;font:inherit;font-weight:600;color:var(--accent);text-decoration:underline;text-decoration-thickness:1px;text-underline-offset:3px}
+.ref small{font-size:11px;font-weight:700;opacity:.8;margin-left:2px}
+.kw{font-weight:600;letter-spacing:.02em}
+
+.related{margin-top:22px}
+.related h4{font-size:12px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted);margin:0 0 8px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{display:inline-flex;align-items:center;gap:8px;background:var(--surface);border:1px solid var(--line);border-radius:999px;padding:6px 12px 6px 6px;cursor:pointer;font-size:14.5px}
+.chip .mini{min-width:32px;height:22px;border-radius:999px;color:#fff;font-size:11.5px;font-weight:700;display:flex;align-items:center;justify-content:center;padding:0 6px}
+
+/* wound calc */
+.calc{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px;margin:0 0 14px;display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;align-items:end}
+.calc label{display:flex;flex-direction:column;font-size:13px;color:var(--muted);gap:4px}
+.calc select{height:44px;border-radius:8px;border:1px solid var(--line);background:var(--bg);color:var(--ink);font:inherit;font-size:17px;padding:0 10px}
+.calc .out{grid-column:1 / -1;display:flex;align-items:baseline;gap:12px;flex-wrap:wrap;border-top:1px solid var(--line);padding-top:12px}
+.calc .big{font-family:var(--font-display);font-size:40px;line-height:1;color:var(--accent);font-variant-numeric:tabular-nums}
+.calc .why{color:var(--muted)}
+.wtable{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums;margin-top:6px}
+.wtable td{padding:5px 8px;border-bottom:1px solid var(--line)}
+.wtable td:last-child{font-weight:700;text-align:right}
+.wtable tr.on td{background:color-mix(in srgb,var(--accent) 14%,transparent)}
+
+/* glossary */
+.letter{font-family:var(--font-display);font-size:20px;color:var(--brass);margin:18px 0 6px;border-bottom:1px solid var(--line);padding-bottom:4px}
+.gl{display:grid;grid-template-columns:1fr auto;gap:0}
+.grow{display:grid;grid-template-columns:minmax(0,1fr) 34px minmax(0,1fr) 54px;gap:10px;align-items:center;padding:8px 6px;border-bottom:1px solid var(--line);cursor:pointer;background:none;border-left:0;border-right:0;border-top:0;text-align:left;width:100%;font:inherit;color:inherit}
+.grow:hover{background:var(--surface)}
+.grow .t{font-weight:600}
+.grow .l{font-size:11px;font-weight:700;color:var(--muted);text-align:center;border:1px solid var(--line);border-radius:4px}
+.grow .tr{color:var(--muted)}
+.grow .c{justify-self:end}
+.alpha{display:flex;flex-wrap:wrap;gap:4px;margin-bottom:8px;position:sticky;top:73px;background:var(--bg);padding:6px 0;z-index:2}
+.alpha button{min-width:30px;height:30px;border:1px solid var(--line);background:var(--surface);border-radius:6px;cursor:pointer;font-weight:600;font-size:13px}
+
+/* search results */
+.rescount{color:var(--muted);margin:0 0 12px}
+mark{background:color-mix(in srgb,var(--brass) 35%,transparent);color:inherit;border-radius:2px;padding:0 1px}
+.empty{background:var(--surface);border:1px dashed var(--line);border-radius:12px;padding:24px;color:var(--muted)}
+
+/* sheet */
+.scrim{position:fixed;inset:0;background:#0008;z-index:20;display:none}
+.sheet{position:fixed;z-index:21;left:50%;bottom:0;transform:translateX(-50%);width:min(680px,100%);max-height:80%;overflow-y:auto;background:var(--bg);border-radius:16px 16px 0 0;padding:14px 16px calc(20px + env(safe-area-inset-bottom));display:none;box-shadow:0 -8px 30px #0005}
+.sheet .grab{width:44px;height:5px;border-radius:3px;background:var(--line);margin:0 auto 12px}
+.sheet .acts{display:flex;justify-content:space-between;gap:8px;margin-top:12px}
+.btn{background:var(--surface);border:1px solid var(--line);border-radius:8px;padding:9px 14px;cursor:pointer;font-weight:600}
+.btn.primary{background:var(--accent);border-color:var(--accent);color:#fff}
+.open .scrim,.open .sheet{display:block}
+
+/* home tiles */
+.tiles{display:grid;grid-template-columns:repeat(auto-fill,minmax(200px,1fr));gap:10px;margin-top:6px}
+.tile{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:14px;text-align:left;cursor:pointer;display:flex;flex-direction:column;gap:4px;border-top:4px solid var(--tc)}
+.tile b{font-size:17px}
+.tile span{color:var(--muted);font-size:14px}
+.note{font-size:13.5px;color:var(--muted);margin-top:22px;max-width:72ch}
+
+/* ---------- responsive ---------- */
+@media (max-width:860px){
+  .app{grid-template-columns:1fr}
+  .side{position:fixed;inset:0 auto 0 0;width:min(300px,86vw);z-index:30;transform:translateX(-100%);transition:transform .22s ease;box-shadow:8px 0 30px #0006}
+  .drawer-open .side{transform:none}
+  .drawer-open .dscrim{display:block}
+  .menubtn{display:flex}
+  .alpha{top:71px}
+}
+.dscrim{position:fixed;inset:0;background:#0007;z-index:25;display:none}
+@media (max-width:480px){
+  .card{grid-template-columns:auto 1fr auto;padding:12px}
+  .card .body{grid-column:1 / -1}
+  .code{grid-row:auto}
+  .grow{grid-template-columns:minmax(0,1fr) 30px minmax(0,1fr) 48px;gap:6px;font-size:14.5px}
+}
+@media (prefers-reduced-motion: reduce){ .side{transition:none} }
+</style>
+</head>
+<body>
+<div class="app" id="app">
+  <aside class="side" id="side" aria-label="Sezioni">
+    <div class="brand">
+      <h1>Codex Rapido</h1>
+      <p>Warhammer 40,000 · 11ª edizione · IT / EN</p>
+    </div>
+    <nav class="nav" id="nav"></nav>
+    <div class="side-foot">
+      Riferimento amatoriale non ufficiale. Le descrizioni sono riassunti: in caso di dubbio fanno fede le Core Rules e l'app ufficiale.
+      <div class="themebtns" role="group" aria-label="Tema">
+        <button id="th-auto" data-th="auto">Auto</button>
+        <button id="th-light" data-th="light">Chiaro</button>
+        <button id="th-dark" data-th="dark">Scuro</button>
+      </div>
+    </div>
+  </aside>
+  <div class="dscrim" id="dscrim"></div>
+  <main class="main" id="main">
+    <div class="topbar">
+      <button class="menubtn" id="menubtn" aria-label="Apri il menu">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+      </button>
+      <div class="search">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.5-3.5"/></svg>
+        <input id="q" type="search" autocomplete="off" placeholder="Cerca in italiano o inglese… es. colpi letali, cover, 2D6" aria-label="Cerca una regola">
+        <button class="clear" id="clear" aria-label="Cancella ricerca">×</button>
+      </div>
+    </div>
+    <div class="content" id="content"></div>
+  </main>
+</div>
+<div id="sheetwrap">
+  <div class="scrim" id="scrim"></div>
+  <div class="sheet" id="sheet" role="dialog" aria-modal="true" aria-label="Dettaglio regola"></div>
+</div>
+
+<script>
+/* ======================= DATI ======================= */
+/* it con * = traduzione italiana non ufficiale. {X1} = collegamento a un'altra voce. */
+const COLORS = {T:'--c-T',C:'--c-C',A:'--c-A',U:'--c-U',K:'--c-K',S:'--c-S',D:'--c-D'};
+
+const E = [
+/* ---- TURNO ---- */
+{id:'T1',sec:'turno',en:'Command Phase',it:'Fase di Comando',b:`<ul><li>Si risolvono le abilità di inizio fase.</li><li>Entrambi i giocatori ottengono <b>1 PC</b>.</li><li>Test di {C3} per ogni unità Sotto Metà Forza {C4} o già Traumatizzata.</li><li>Altre regole di Comando (fazione, distaccamento), poi fine fase.</li></ul>`},
+{id:'T2',sec:'turno',en:'Movement Phase',it:'Fase di Movimento',b:`<p>Per ogni unità scegli una mossa:</p><ul><li><b>Normal Move</b>: fino a M", solo se non ingaggiata.</li><li><b>Advance</b>: M + D6". Poi niente carica e niente Azioni; spara solo con armi {A2}.</li><li><b>Fall Back</b>: M", solo se ingaggiata. Poi niente tiro, carica o Azioni.</li><li><b>Remain Stationary</b>: resta ferma.</li></ul><p>Attraversare unità amiche e ruotare i modelli è gratis. Poi imbarchi/sbarchi {C19} e ingressi dalle Riserve {C18}.</p>`},
+{id:'T3',sec:'turno',en:'Shooting Phase',it:'Fase di Tiro',b:`<p>Tipi di tiro: <b>Normale</b> (non ingaggiata, non ha avanzato) · <b>Assalto</b> (ha avanzato, solo {A2}) · <b>Ravvicinato</b> (ingaggiata: armi {A5} o {K4}/{K5}) · <b>Indiretto</b> ({A11}).</p><p>Sequenza: Colpire → Ferire {C6} → Salvezza {C7} → Danno. Armi diverse dello stesso modello possono avere bersagli diversi, ma una singola arma non si divide.</p>`},
+{id:'T4',sec:'turno',en:'Charge Phase',it:'Fase di Carica',b:`<p>Dichiara <b>tutti</b> i bersagli entro <b>12"</b> (non serve vederli), poi tira <b>2D6</b>: è la distanza massima.</p><p>Ogni modello deve finire più vicino a un bersaglio; l'unità deve finire ingaggiata con tutti i bersagli dichiarati e con nessun'altra unità. I modelli di un'unità che carica ottengono {U5}.</p>`},
+{id:'T5',sec:'turno',en:'Fight Phase',it:'Fase di Combattimento',b:`<ul><li><b>Pile In</b>: tutte le unità coinvolte muovono fino a 3" (prima il giocatore attivo).</li><li><b>Fights First</b>: si alternano le unità con {U5}, inizia il giocatore attivo.</li><li><b>Remaining Combats</b>: si alternano tutte le altre.</li><li><b>Overrun fight</b>: un'unità non più ingaggiata fa un pile-in extra e poi combatte.</li><li><b>Consolidate</b>: fino a 3", verso il nemico o verso un obiettivo.</li></ul>`},
+{id:'T6',sec:'turno',en:'End of Turn',it:'Fine del turno',b:`<p>Si controlla la coesione {C2}: i modelli fuori coesione vengono rimossi. Il controllo degli obiettivi {C14} si verifica a fine di ogni fase e di ogni turno.</p>`},
+
+/* ---- COMANDO ---- */
+{id:'C3',sec:'comando',en:'Battle-shock',it:'Shock da Battaglia / Traumatizzato',nuovo:true,b:`<p>Test: <b>2D6 ≥ Cd</b> dell'unità. Se fallisce l'unità è <b>Traumatizzata</b>:</p><ul><li>OC diventa “–”</li><li>non può essere bersaglio di stratagemmi</li><li>non può iniziare Azioni {C17} né fare Surge {C15}</li><li>se si ritira deve fare <b>Desperate Escape</b>: un Tiro Pericolo {C13} per modello.</li></ul><p><b>Novità 11ª:</b> lo stato non sparisce da solo a fine turno. Devi superare il test nella tua fase di Comando per toglierlo.</p>`},
+{id:'C4',sec:'comando',en:'Below Half-strength',it:'Sotto Metà Forza',u:1,b:`<p>Modelli rimasti (o ferite rimaste, per un'unità di un solo modello) pari o inferiori alla metà di quelli iniziali. Fa scattare il test di {C3}.</p>`},
+
+/* ---- MOVIMENTO ---- */
+{id:'C2',sec:'movimento',en:'Unit Coherency',it:'Coesione dell’unità',u:1,nuovo:true,b:`<p>A fine turno ogni modello deve essere:</p><ul><li>entro <b>2"</b> da almeno un altro modello della sua unità, <b>e</b></li><li>entro <b>9"</b> orizzontali / 5" verticali da <b>tutti</b> gli altri modelli dell'unità.</li></ul><p>La seconda condizione è nuova: niente più file lunghissime di modelli per schermare il tavolo.</p>`},
+{id:'C15',sec:'movimento',en:'Surge Move',it:'Mossa d’Impeto',u:1,b:`<p>Mossa fuori fase concessa da alcune regole, verso l'unità nemica più vicina, finendo ingaggiata se possibile. Solo se l'unità non è Traumatizzata, non è ingaggiata e non si è già mossa in questa fase.</p>`},
+{id:'C16',sec:'movimento',en:'Take to the Skies',it:'Prendere il Volo',u:1,nuovo:true,b:`<p>Un'unità con {K10}, prima di una mossa normale, avanzata, ritirata o di carica, può dichiararlo: la distanza massima cala di <b>2"</b>, ma attraversa modelli e terreno ignorando la distanza verticale. Con {U7} non c'è il −2".</p>`},
+{id:'C18',sec:'movimento',en:'Strategic Reserves / Ingress',it:'Riserve Strategiche / Ingresso',b:`<ul><li>Al massimo il <b>50%</b> dei punti dell'armata.</li><li>Entrano dal <b>round 2</b>, interamente entro 6" da un bordo e a più di <b>8"</b> da tutti i nemici.</li><li>Prima del round 3 non possono entrare nella zona di schieramento nemica.</li><li>Non entrate entro la fine del round 3: <b>distrutte</b>.</li><li>Dopo un ingresso l'unità non fa altre mosse fino alla prossima fase di Carica.</li></ul><p>Vedi anche {U3} e lo stratagemma {S6}.</p>`},
+{id:'C19',sec:'movimento',en:'Embark / Disembark',it:'Imbarco / Sbarco',nuovo:true,b:`<p><b>Imbarco:</b> dopo una mossa normale, avanzata o di ritirata, tutti i modelli entro 3" dal trasporto (capienza permettendo).</p><ul><li><b>Rapid</b> (3"): il trasporto si è mosso. L'unità non può caricare.</li><li><b>Tactical</b> (3"): il trasporto non si è mosso. L'unità poi può muovere normalmente.</li><li><b>Combat</b> (6"): in ogni altro caso, anche con il trasporto circondato. Tiro Pericolo {C13} per modello, unità Traumatizzata, niente carica.</li><li><b>Emergency</b>: il trasporto è distrutto. Entro 6", Tiro Pericolo, Traumatizzata.</li></ul>`},
+
+/* ---- TIRO ---- */
+{id:'C5',sec:'tiro',en:'Critical Hit / Critical Wound',it:'Colpo Critico / Ferita Critica',b:`<p>Un <b>6 non modificato</b> (cioè il numero sul dado, prima di +1/−1) nel tiro per colpire o per ferire. Un 1 non modificato fallisce sempre.</p><p>Da sola una critica è solo un successo. Diventa importante con: {A13} e {A20} (colpo critico), {A6} (ferita critica). {A1} abbassa la soglia della ferita critica, così ferisci anche quando Forza e Resistenza sono sfavorevoli.</p>`},
+{id:'C6',sec:'tiro',en:'Wound Roll',it:'Tiro per Ferire',b:`<ul><li>Fo ≥ 2 × R: <b>2+</b></li><li>Fo > R: <b>3+</b></li><li>Fo = R: <b>4+</b></li><li>Fo < R: <b>5+</b></li><li>Fo ≤ ½ R: <b>6+</b></li></ul><p>Prova il calcolatore qui sopra.</p>`},
+{id:'C7',sec:'tiro',en:'Saving Throw & Allocation',it:'Tiro Salvezza e Assegnazione',nuovo:true,b:`<p>Tiro salvezza: D6 − VP contro Sv, oppure Invulnerabile (che ignora il VP).</p><p><b>Novità 11ª:</b> si formano gruppi di modelli con lo stesso profilo. L'ordine è: prima i non-{K7} feriti, poi gli altri non-Personaggi, i Personaggi per ultimi (salvo {A17}). Il danno in eccesso su un modello si perde.</p>`},
+{id:'C8',sec:'tiro',en:'Mortal Wounds',it:'Ferite Mortali',b:`<p>Ognuna toglie 1 ferita senza tiro salvezza. Si applicano dopo il danno normale dello stesso attacco. {U4} funziona anche contro di esse.</p>`},
+{id:'C13',sec:'tiro',en:'Hazard Roll',it:'Tiro Pericolo',u:1,nuovo:true,b:`<p>Tira D6: con <b>1-2</b> l'unità subisce 1 ferita mortale (<b>3</b> se è {K4} o {K5}). Lo richiedono {A8}, Desperate Escape {C3} e gli sbarchi di Combattimento/Emergenza {C19}.</p>`},
+
+/* ---- CARICA & COMBATTIMENTO ---- */
+{id:'C1',sec:'mischia',en:'Engagement Range',it:'Distanza di Ingaggio',nuovo:true,b:`<p><b>2"</b> in orizzontale e <b>5"</b> in verticale (in 10ª era 1"). Un'unità entro questa distanza da un nemico è <b>ingaggiata</b>.</p>`},
+
+/* ---- TERRENO ---- */
+{id:'C12',sec:'terreno',en:'Terrain Categories',it:'Categorie di terreno',u:1,nuovo:true,b:`<ul><li><b>Exposed (Esposto)</b>: crateri, filo spinato. Poca protezione, nessun ostacolo.</li><li><b>Light (Leggero)</b>: barricate, muretti. Dà copertura, non rallenta.</li><li><b>Dense (Denso)</b>: rovine, edifici, boschi. Blocca la maggior parte di movimento e vista.</li></ul>`},
+{id:'C21',sec:'terreno',en:'Moving Through Terrain',it:'Muoversi nel terreno',u:1,b:`<ul><li>Esposto e leggero: tutti li attraversano liberamente.</li><li>Denso: {K1}, {K2}, {K3} e {K11} lo attraversano in orizzontale (fanteria, bestie e sciami anche in verticale).</li><li>Gli altri modelli attraversano solo sezioni alte fino a 2" e scavalcano quelle più alte.</li><li>Si può finire su una superficie rialzata solo se tutti i modelli sono Fanteria, Bestie, Sciame, {K10} o {K4}, e nessuna basetta sporge.</li></ul>`},
+{id:'C22',sec:'terreno',en:'Obscuring & Solid',it:'Occultante e Solido',u:1,b:`<p><b>Obscuring</b>: un'area di terreno con elementi leggeri o densi blocca la vista se <b>tutte</b> le linee di vista la attraversano e nessuno dei due modelli è dentro.</p><p><b>Solid</b>: gli elementi densi bloccano la vista attraverso aperture chiuse a 3" o meno da terra (le finestre basse delle rovine).</p>`},
+
+/* ---- COPERTURA ---- */
+{id:'C9',sec:'copertura',en:'Benefit of Cover',it:'Beneficio della Copertura',nuovo:true,b:`<p><b>Novità 11ª:</b> la copertura <b>peggiora di 1 l'AB</b> dell'attaccante, invece di dare +1 al tiro salvezza.</p><p>Si applica se <b>tutti</b> i modelli bersaglio sono {K1}, {K2} o {K3} e si trovano dentro un'area di terreno, oppure non sono pienamente visibili a causa del terreno. Si valuta per ogni modello che attacca, quindi può valere solo per una parte dell'unità che spara.</p><p>Annullata da {A10}. Ottenuta sempre con {U12} o con {S8}.</p>`},
+{id:'C10',sec:'copertura',en:'Hidden',it:'Nascosto',u:1,nuovo:true,b:`<p><b>Nuovo.</b> Un'unità {K1}, {K2} o {K3} dentro un'area di terreno con elementi leggeri o densi, che <b>non ha fatto attacchi a distanza</b> in questo turno né nel precedente, può essere bersagliata solo da entro <b>15"</b>.</p><p><b>Gone to Ground (Al riparo)</b>: se è anche non pienamente visibile a causa di terreno denso, la distanza scende di altri 3".</p>`},
+{id:'C11',sec:'copertura',en:'Plunging Fire',it:'Tiro dall’Alto',u:1,nuovo:true,b:`<p><b>+1 all'AB</b> se l'attaccante è su terreno alto almeno 3", oppure è {K12} e il bersaglio a terra è entro 12". Non vale contro i {K14}.</p>`},
+
+/* ---- OBIETTIVI ---- */
+{id:'C14',sec:'obiettivi',en:'Objectives & Level of Control',it:'Obiettivi e Livello di Controllo',u:1,nuovo:true,b:`<p><b>Novità 11ª:</b> gli obiettivi sono <b>aree di terreno</b>: sei in raggio se il modello è interamente dentro l'area. Se in quel punto non c'è terreno si usa un segnalino (entro 3" orizzontali / 5" verticali).</p><p>Somma l'OC dei tuoi modelli in raggio: il totale più alto controlla l'obiettivo, in caso di parità è conteso.</p><p><b>Secured</b>: un obiettivo assicurato resta tuo anche se te ne vai, finché a fine fase l'avversario non ti supera.</p>`},
+{id:'C17',sec:'obiettivi',en:'Actions',it:'Azioni',u:1,b:`<p>Un'unità <b>non può iniziare</b> un'Azione se: è Traumatizzata, ha OC 0 o “–”, è ingaggiata (salvo {K13}), ha avanzato o si è ritirata in questo turno, è {K14} o {K19}, o ha già iniziato un'altra Azione.</p><p>Durante l'Azione non spara e non dichiara cariche. L'Azione fallisce se l'unità fa qualsiasi mossa che non sia pile-in o consolidamento, o lascia il campo.</p>`},
+
+/* ---- ARMI ---- */
+{id:'A1',sec:'armi',en:'[ANTI-X Y+]',it:'[ANTI-X Y+]',b:`<p>Contro un bersaglio con la keyword X, un tiro per ferire <b>non modificato</b> di Y+ è una Ferita Critica {C5}, quindi ferisce sempre. Esempio: con <i>Anti-Vehicle 4+</i> un'arma debole ferisce un carro armato con 4+.</p>`},
+{id:'A2',sec:'armi',en:'[ASSAULT]',it:'[ASSALTO]',u:1,b:`<p>Si può sparare con quest'arma anche dopo aver Avanzato (tiro d'assalto).</p>`},
+{id:'A3',sec:'armi',en:'[BLAST] / [BLAST X]',it:'[ESPLOSIVA]',u:1,b:`<p>+1 dado attacco (o +X) ogni <b>5 modelli</b> dell'unità bersaglio, arrotondando per difetto. Non può bersagliare unità ingaggiate.</p>`},
+{id:'A4',sec:'armi',en:'[CLEAVE X]',it:'[FENDENTE]',u:1,nuovo:true,b:`<p>Il “Blast” da mischia. Se tutti gli attacchi del modello vanno sulla stessa unità, +X dadi attacco ogni 5 modelli di quell'unità.</p>`},
+{id:'A5',sec:'armi',en:'[CLOSE-QUARTERS]',it:'[RAVVICINATA]',u:1,nuovo:true,b:`<p>Sostituisce {A16}. Permette di sparare anche da ingaggiati, contro un'unità con cui si è ingaggiati. Un modello che non è Mostro/Veicolo spara con queste armi <b>oppure</b> con le altre armi da tiro, non entrambe.</p>`},
+{id:'A6',sec:'armi',en:'[DEVASTATING WOUNDS]',it:'[FERITE DEVASTANTI]',b:`<p>Con una Ferita Critica {C5} l'attacco finisce lì: niente tiro salvezza, il bersaglio subisce ferite mortali {C8} pari al Danno dell'arma, dopo il danno normale. Ogni ferita critica può distruggere <b>al massimo 1 modello</b>.</p>`},
+{id:'A7',sec:'armi',en:'[EXTRA ATTACKS]',it:'[ATTACCHI EXTRA]',u:1,b:`<p>Si usa sempre <b>in aggiunta</b> a un'altra arma da mischia, non al suo posto.</p>`},
+{id:'A8',sec:'armi',en:'[HAZARDOUS]',it:'[PERICOLOSA]',u:1,nuovo:true,b:`<p>Dopo aver sparato o combattuto, fai un Tiro Pericolo {C13} per ogni arma Pericolosa usata: con 1-2, 1 ferita mortale (3 se Mostro/Veicolo).</p>`},
+{id:'A9',sec:'armi',en:'[HEAVY]',it:'[PESANTE]',nuovo:true,b:`<p><b>+1 per colpire</b> in fase di Tiro se l'unità non è ingaggiata, non è stata schierata in questo turno e <b>nessun modello si è mosso più di 3"</b>. In 11ª puoi quindi fare piccoli spostamenti e mantenere il bonus.</p>`},
+{id:'A10',sec:'armi',en:'[IGNORES COVER]',it:'[IGNORA LA COPERTURA]',b:`<p>Il bersaglio non ottiene il Beneficio della Copertura {C9} contro questi attacchi.</p>`},
+{id:'A11',sec:'armi',en:'[INDIRECT FIRE]',it:'[FUOCO INDIRETTO]',u:1,b:`<p>Può bersagliare unità non visibili. In quel caso il bersaglio ha la copertura e non si possono ripetere i tiri per colpire; i tiri non modificati 1-5 falliscono, oppure 1-3 se l'unità è rimasta ferma e un'unità amica vede il bersaglio.</p>`},
+{id:'A12',sec:'armi',en:'[LANCE]',it:'[LANCIA]',u:1,b:`<p>+1 per ferire se l'unità ha caricato in questo turno.</p>`},
+{id:'A13',sec:'armi',en:'[LETHAL HITS]',it:'[COLPI LETALI]',b:`<p>Con un Colpo Critico {C5} puoi scegliere che l'attacco ferisca automaticamente, senza tiro per ferire.</p>`},
+{id:'A14',sec:'armi',en:'[MELTA X]',it:'[FUSIONE]',u:1,b:`<p>Se il bersaglio è entro metà gittata, +X al Danno.</p>`},
+{id:'A15',sec:'armi',en:'[ONE SHOT]',it:'[COLPO SINGOLO]',u:1,b:`<p>Si può usare una sola volta per battaglia (ogni copia dell'arma una volta).</p>`},
+{id:'A16',sec:'armi',en:'[PISTOL]',it:'[PISTOLA]',u:1,b:`<p>Nome vecchio: funziona esattamente come {A5}.</p>`},
+{id:'A17',sec:'armi',en:'[PRECISION]',it:'[PRECISIONE]',u:1,b:`<p>Puoi far subire gli attacchi a un {K7} visibile dell'unità bersaglio, invece che alla guardia del corpo.</p>`},
+{id:'A18',sec:'armi',en:'[PSYCHIC]',it:'[PSICHICA]',b:`<p>Ignora tutti i modificatori ad AB/AC e al tiro per colpire. Sono attacchi psichici.</p>`},
+{id:'A19',sec:'armi',en:'[RAPID FIRE X]',it:'[FUOCO RAPIDO]',u:1,b:`<p>+X dadi attacco se il bersaglio è entro metà gittata.</p>`},
+{id:'A20',sec:'armi',en:'[SUSTAINED HITS X]',it:'[SCARICA DI COLPI]',b:`<p>Ogni Colpo Critico {C5} genera X colpi aggiuntivi sul bersaglio. I colpi aggiuntivi non attivano {A13}.</p>`},
+{id:'A21',sec:'armi',en:'[TORRENT]',it:'[TORRENZIALE]',b:`<p>Colpisce automaticamente: niente tiro per colpire, quindi niente colpi critici. Non può avere {A11} né {A17}.</p>`},
+{id:'A22',sec:'armi',en:'[TWIN-LINKED]',it:'[BINATA]',b:`<p>Puoi ripetere il tiro per ferire.</p>`},
+
+/* ---- ABILITÀ UNITÀ ---- */
+{id:'U1',sec:'unita',en:'Damaged X',it:'Danneggiato',u:1,b:`<p>Quando al modello restano X ferite o meno, i suoi attacchi hanno −1 per colpire.</p>`},
+{id:'U2',sec:'unita',en:'Deadly Demise X',it:'Morte Esplosiva',u:1,b:`<p>Quando il modello viene distrutto tira D6: con un 6, ogni unità entro 6" subisce X ferite mortali.</p>`},
+{id:'U3',sec:'unita',en:'Deep Strike',it:'Attacco in Profondità',b:`<p>Con la mossa di ingresso {C18} l'unità può essere piazzata ovunque a più di <b>8"</b> orizzontali da tutti i nemici, anche nella zona di schieramento avversaria.</p>`},
+{id:'U4',sec:'unita',en:'Feel No Pain X+',it:'Insensibile al Dolore',b:`<p>Ogni volta che il modello perderebbe una ferita tira D6: con X+ non la perde. Vale anche contro le ferite mortali.</p>`},
+{id:'U5',sec:'unita',en:'Fights First',it:'Combatte per Primo',u:1,b:`<p>Se tutti i modelli dell'unità ce l'hanno, l'unità combatte nel passo Fights First {T5}. Le unità che hanno caricato lo ottengono in automatico.</p>`},
+{id:'U6',sec:'unita',en:'Firing Deck X',it:'Ponte di Fuoco',u:1,b:`<p>Quando il trasporto spara, fino a X modelli imbarcati aggiungono le loro armi da tiro (non {A15}). Le unità che lo fanno non possono sparare per conto proprio in quel turno.</p>`},
+{id:'U7',sec:'unita',en:'Hover',it:'Librarsi',u:1,nuovo:true,b:`<p>Quando l'unità usa {C16} non subisce la penalità di −2".</p>`},
+{id:'U8',sec:'unita',en:'Infiltrators',it:'Infiltratori',u:1,b:`<p>Si schiera ovunque a più di 8" dalla zona di schieramento avversaria e da tutte le unità nemiche.</p>`},
+{id:'U9',sec:'unita',en:'Leader',it:'Leader',nuovo:true,b:`<p>Si aggrega a un'unità guardia del corpo <b>già nella lista</b>, non più alla dichiarazione delle formazioni. Ogni unità può avere al massimo 1 Leader e 1 {U14}. Vedi {C20}.</p>`},
+{id:'U10',sec:'unita',en:'Lone Operative (X")',it:'Agente Solitario',b:`<p>Se non è aggregato, non è visibile ai nemici oltre 12" (o X"); il fuoco indiretto può bersagliarlo solo entro quella distanza.</p>`},
+{id:'U11',sec:'unita',en:'Scouts X"',it:'Esploratori',b:`<p>Prima della battaglia l'unità fa una mossa esploratore fino a X", finendo a più di 8" orizzontali da tutti i nemici.</p>`},
+{id:'U12',sec:'unita',en:'Stealth',it:'Furtività',b:`<p>Se tutti i modelli ce l'hanno, gli attacchi a distanza contro l'unità subiscono il Beneficio della Copertura {C9}.</p>`},
+{id:'U13',sec:'unita',en:'Super-Heavy Walker',it:'Camminatore Superpesante',u:1,b:`<p>Attraversa i modelli (non {K13}) e il terreno alto fino a 4". Può ottenere {K11} per una mossa, ma con un 1 su D6 diventa Traumatizzato.</p>`},
+{id:'U14',sec:'unita',en:'Support',it:'Supporto',u:1,nuovo:true,b:`<p>Come {U9}, ma per i personaggi di supporto: si aggrega alla stessa unità insieme al Leader.</p>`},
+{id:'C20',sec:'unita',en:'Attached Unit',it:'Unità aggregata',b:`<p>Leader, guardia del corpo ed eventuale Support contano come <b>un'unica unità</b>. Si usa la <b>Resistenza più alta</b> tra i modelli della guardia del corpo; le keyword sono condivise. Le abilità che riguardano tutta l'unità durano finché il loro modello è in vita.</p>`},
+
+/* ---- KEYWORD ---- */
+{id:'K1',sec:'keyword',en:'INFANTRY',it:'FANTERIA',b:`<p>Attraversa il terreno denso {C21}, può avere la copertura {C9} e può essere Nascosta {C10}.</p>`},
+{id:'K2',sec:'keyword',en:'BEASTS',it:'BESTIE',u:1,b:`<p>Come {K1} per terreno, copertura e Nascosto.</p>`},
+{id:'K3',sec:'keyword',en:'SWARM',it:'SCIAME',u:1,b:`<p>Come {K1} per terreno, copertura e Nascosto.</p>`},
+{id:'K4',sec:'keyword',en:'MONSTER',it:'MOSTRO',b:`<p>Può sparare da ingaggiato: −1 per colpire, salvo armi {A5} contro unità ingaggiate. Può essere bersagliato da ingaggiato, a −1. I suoi Tiri Pericolo fanno 3 ferite mortali. Può usare {S5}.</p>`},
+{id:'K5',sec:'keyword',en:'VEHICLE',it:'VEICOLO',b:`<p>Come {K4}. Può fare {S9} solo se è anche {K7} o {K6}.</p>`},
+{id:'K6',sec:'keyword',en:'WALKER',it:'CAMMINATORE',u:1,b:`<p>Veicolo con gambe (es. Dreadnought): può usare {S9}.</p>`},
+{id:'K7',sec:'keyword',en:'CHARACTER',it:'PERSONAGGIO',b:`<p>In un'unità aggregata riceve le ferite per ultimo, salvo {A17}. Può usare {S3}.</p>`},
+{id:'K8',sec:'keyword',en:'EPIC HERO',it:'EROE EPICO',u:1,b:`<p>Personaggio con nome: uno solo per armata.</p>`},
+{id:'K9',sec:'keyword',en:'BATTLELINE',it:'LINEA DI BATTAGLIA',b:`<p>Truppe di linea, richiamate da molte regole di missione e di distaccamento.</p>`},
+{id:'K10',sec:'keyword',en:'FLY',it:'VOLO',u:1,b:`<p>Ignora la distanza verticale quando muove, attraversa modelli e terreno; può dichiarare {C16}. Può caricare i {K14}.</p>`},
+{id:'K11',sec:'keyword',en:'MOBILE',it:'MOBILE',u:1,nuovo:true,b:`<p>Attraversa in orizzontale il terreno denso, come la fanteria.</p>`},
+{id:'K12',sec:'keyword',en:'TOWERING',it:'TORREGGIANTE',u:1,b:`<p>Ottiene il Tiro dall'Alto {C11} contro bersagli a terra entro 12".</p>`},
+{id:'K13',sec:'keyword',en:'TITANIC',it:'TITANICO',u:1,b:`<p>Può iniziare Azioni da ingaggiato; non può usare {S7}.</p>`},
+{id:'K14',sec:'keyword',en:'AIRCRAFT',it:'VELIVOLO',u:1,b:`<p>Parte sempre in Riserve Strategiche {C18}, entra solo con mosse di ingresso e torna in riserva alla fine del turno avversario. Solo le unità {K10} possono caricarlo. Niente Tiro dall'Alto contro di esso.</p>`},
+{id:'K15',sec:'keyword',en:'FRAME',it:'TELAIO',u:1,nuovo:true,b:`<p>Modelli senza basetta (es. trasporti): le distanze si misurano dal punto più vicino del modello, che ruota sul proprio asse.</p>`},
+{id:'K16',sec:'keyword',en:'SMOKE',it:'FUMO',u:1,b:`<p>Può usare lo stratagemma {S8}.</p>`},
+{id:'K17',sec:'keyword',en:'GRENADES / EXPLOSIVES',it:'GRANATE / ESPLOSIVI',u:1,b:`<p>Può usare lo stratagemma {S4}.</p>`},
+{id:'K18',sec:'keyword',en:'PSYKER',it:'PSIONICO',b:`<p>Unità psioniche: le regole dipendono dalla fazione e dal distaccamento.</p>`},
+{id:'K19',sec:'keyword',en:'FORTIFICATION',it:'FORTIFICAZIONE',u:1,b:`<p>Non può iniziare Azioni.</p>`},
+
+/* ---- STRATAGEMMI ---- */
+{id:'D1',sec:'strat',en:'Stratagem Limits',it:'Limiti degli stratagemmi',nuovo:true,b:`<p>Ogni stratagemma una volta per fase. <b>Novità 11ª:</b> ogni unità può essere bersaglio di <b>un solo stratagemma per fase</b>: niente più cumuli di bonus sulla stessa unità. Le unità Traumatizzate non possono esserne bersaglio.</p>`},
+{id:'S1',sec:'strat',en:'Command Re-roll',it:'Ripetizione di Comando',u:1,cp:'1PC',b:`<p><b>Quando:</b> in qualsiasi fase.<br>Ripeti un tiro di avanzata, carica (tutto il tiro), danno, Pericolo, colpire, salvezza, ferire o numero di attacchi. Se il tiro ha più dadi, ne ripeti uno.</p>`},
+{id:'S2',sec:'strat',en:'Insane Bravery',it:'Coraggio Folle',u:1,cp:'1PC',b:`<p><b>Quando:</b> tua fase di Comando, prima di un test di {C3}.<br>Il test è superato automaticamente. <b>Una volta per battaglia.</b></p>`},
+{id:'S3',sec:'strat',en:'Epic Challenge',it:'Sfida Epica',u:1,cp:'1PC',b:`<p><b>Quando:</b> tua fase di Combattimento, quando un {K7} viene scelto per combattere.<br>Le sue armi da mischia ottengono {A17}.</p>`},
+{id:'S4',sec:'strat',en:'Explosives',it:'Esplosivi',u:1,cp:'1PC',nuovo:true,b:`<p>Ex “Grenade”. <b>Quando:</b> tua fase di Tiro.<br>Un'unità {K17} non ingaggiata che non ha avanzato sceglie un nemico visibile entro <b>8"</b>: tira 6D6, ogni 4+ = 1 ferita mortale.</p>`},
+{id:'S5',sec:'strat',en:'Crushing Impact',it:'Impatto Devastante',u:1,cp:'1PC',nuovo:true,b:`<p>Sostituisce Tank Shock. <b>Quando:</b> tua fase di Carica, dopo la mossa di carica di un {K4} o {K5}.<br>Scegli un tuo modello ingaggiato e tira tanti D6 quanto la sua Resistenza: ogni 1 = 1 ferita mortale alla tua unità, ogni 5+ = 1 ferita mortale al nemico (max 6).</p>`},
+{id:'S6',sec:'strat',en:'Rapid Ingress',it:'Ingresso Rapido',u:1,cp:'1PC',b:`<p><b>Quando:</b> fine della fase di Movimento avversaria.<br>Un'unità in Riserve Strategiche (non {K14}) fa una mossa di ingresso. Non nel primo round.</p>`},
+{id:'S7',sec:'strat',en:'Fire Overwatch',it:'Fuoco di Copertura',u:1,cp:'1PC',b:`<p><b>Quando:</b> fine della fase di Movimento avversaria.<br>Un'unità non ingaggiata (non {K13}) spara a un nemico visibile entro 24". Colpisce solo con <b>6 non modificati</b>, niente ripetizioni.</p>`},
+{id:'S8',sec:'strat',en:'Smokescreen',it:'Cortina Fumogena',u:1,cp:'1PC',nuovo:true,b:`<p><b>Quando:</b> inizio della fase di Tiro avversaria.<br>Un'unità {K16}, e le unità non pienamente visibili a causa sua, hanno il Beneficio della Copertura {C9}. Ora vale solo −1 AB all'attaccante.</p>`},
+{id:'S9',sec:'strat',en:'Heroic Intervention',it:'Intervento Eroico',cp:'1-2PC',nuovo:true,b:`<p><b>Quando:</b> fine della fase di Carica avversaria. Un'unità non ingaggiata entro 12" da un nemico dichiara una carica.</p><ul><li><b>1PC · Leap to Defend</b>: solo contro unità che hanno caricato in questa fase.</li><li><b>2PC · Into the Fray</b>: qualsiasi nemico entro 6"; un tiro di carica oltre 6 vale 6.</li></ul><p>I {K5} solo se anche {K7} o {K6}.</p>`},
+{id:'S10',sec:'strat',en:'Counteroffensive',it:'Controffensiva',u:1,cp:'2PC',b:`<p><b>Quando:</b> fase di Combattimento avversaria, dopo che un'unità nemica ha attaccato.<br>Una tua unità idonea ottiene {U5} e combatte subito dopo.</p>`},
+
+/* ---- LISTA ---- */
+{id:'D2',sec:'lista',en:'Detachment Points (DP)',it:'Punti Distaccamento',u:1,nuovo:true,b:`<p>Ogni distaccamento costa da 1 a 3 DP. Hai <b>2 DP</b> a 1000 punti (Incursion) e <b>3 DP</b> a 2000 punti (Strike Force). Puoi combinare più distaccamenti, ma non due con la stessa etichetta (tag).</p><p>Esempio Dark Angels a 2000 punti: un distaccamento DA da 2 DP + uno da 1 DP del Codex Space Marines.</p>`},
+{id:'D3',sec:'lista',en:'Force Disposition',it:'Disposizione delle forze',u:1,nuovo:true,b:`<ul><li>Disruption · Disturbo</li><li>Reconnaissance · Ricognizione</li><li>Priority Assets · Risorse Prioritarie</li><li>Purge the Foe · Epurare il Nemico</li><li>Take and Hold · Conquista e Mantieni</li></ul><p>Ogni distaccamento ne ha una; con più distaccamenti ne scegli <b>una</b> per l'armata. Confrontata con quella avversaria determina la tua missione primaria.</p>`},
+{id:'D4',sec:'lista',en:'Enhancements / Upgrades',it:'Potenziamenti / Migliorie',u:1,nuovo:true,b:`<p>Massimo <b>2</b> Potenziamenti a 1000 punti, <b>4</b> a 2000. Quelli con tag <b>Upgrade</b> vanno su unità non-Personaggio: fino a 3 unità contano come una sola scelta (ma paghi i punti per ciascuna).</p>`},
+{id:'D5',sec:'lista',en:'Leader Attachment',it:'Aggregare i Leader',b:`<p>Leader e Support si aggregano già nella lista {U9}, non più alla dichiarazione delle formazioni di battaglia.</p>`},
+];
+
+const SECS = [
+ {id:'home',it:'Inizio',en:'Start'},
+ {id:'turno',it:'Sequenza del turno',en:'Turn sequence',c:'T',intro:'Le cinque fasi di ogni turno, nell’ordine in cui si giocano.'},
+ {id:'comando',it:'Comando e Shock',en:'Command & Battle-shock',c:'T',intro:'Punti Comando e test di Shock da Battaglia, che in 11ª pesano di più.',rel:['T1','S2']},
+ {id:'movimento',it:'Movimento e Trasporti',en:'Movement & Transports',c:'C',intro:'Tipi di mossa, coesione, volo, riserve e regole di sbarco.',rel:['T2','U3','U8','U11','S6']},
+ {id:'tiro',it:'Tiro e Danni',en:'Shooting & Damage',c:'C',intro:'Dalla sequenza d’attacco al tiro salvezza. Usa il calcolatore per sapere al volo cosa ti serve per ferire.',rel:['T3','A9','C9','C11']},
+ {id:'mischia',it:'Carica e Combattimento',en:'Charge & Fight',c:'C',intro:'Cariche, ordine di combattimento e distanza di ingaggio.',rel:['T4','T5','U5','S9','S10','S5']},
+ {id:'terreno',it:'Terreno',en:'Terrain',c:'C',intro:'In 11ª il terreno è anche l’obiettivo: capire come ci si muove e cosa blocca la vista è fondamentale.',rel:['C14','C9','C10']},
+ {id:'copertura',it:'Copertura e Visibilità',en:'Cover & Visibility',c:'C',intro:'Come funzionano copertura, unità nascoste e tiro dall’alto. Tutte e tre sono cambiate in 11ª.',rel:['U12','A10','U10','S8','C22']},
+ {id:'obiettivi',it:'Obiettivi e Azioni',en:'Objectives & Actions',c:'C',intro:'Controllo degli obiettivi (ora aree di terreno) e Azioni di missione.',rel:['C12','C3']},
+ {id:'armi',it:'Abilità delle armi',en:'Weapon abilities',c:'A',intro:'Le keyword tra parentesi quadre nei profili delle armi.'},
+ {id:'unita',it:'Abilità delle unità',en:'Core unit abilities',c:'U',intro:'Le abilità base indicate sulle schede delle unità.'},
+ {id:'keyword',it:'Keyword delle unità',en:'Unit keywords',c:'K',intro:'Keyword di tipo unità che hanno effetti propri nelle regole base.'},
+ {id:'strat',it:'Stratagemmi base',en:'Core stratagems',c:'S',intro:'Disponibili a tutte le armate, oltre a quelli del distaccamento.'},
+ {id:'lista',it:'Distaccamenti e lista',en:'Detachments & army list',c:'D',intro:'Come si costruisce l’armata con il nuovo sistema a Punti Distaccamento.'},
+ {id:'preferiti',it:'Preferiti',en:'Favourites'},
+ {id:'glossario',it:'Glossario IT ↔ EN',en:'Glossary'},
+];
+
+const EXTRA_GLOSS = [
+ ['Advance','Avanzare','T2'],['Normal Move','Movimento Normale','T2'],['Fall Back','Ritirata','T2'],['Remain Stationary','Restare fermi*','T2'],
+ ['Desperate Escape','Fuga Disperata*','C3'],['Pile In','Ammassarsi*','T5'],['Consolidate','Consolidare*','T5'],['Overrun fight','Combattimento di sfondamento*','T5'],
+ ['Command Points (CP)','Punti Comando (PC)','T1'],['Ballistic Skill (BS)','Abilità Balistica (AB)','T3'],['Weapon Skill (WS)','Abilità di Combattimento (AC)','T5'],
+ ['Strength (S)','Forza (Fo)','C6'],['Toughness (T)','Resistenza (R)','C6'],['Armour Penetration (AP)','Valore di Penetrazione (VP)','C7'],['Damage (D)','Danno (D)','C7'],
+ ['Save (Sv)','Salvezza (Sv)','C7'],['Invulnerable Save','Tiro Salvezza Invulnerabile','C7'],['Leadership (Ld)','Disciplina (Cd)','C3'],['Objective Control (OC)','Controllo Obiettivo (OC)','C14'],
+ ['Secured','Assicurato*','C14'],['Gone to Ground','Al riparo*','C10'],['Bodyguard unit','Unità guardia del corpo','C20'],['Engaged','Ingaggiato','C1'],
+ ['Strategic Ploy','Espediente Strategico','S1'],['Battle Tactic','Tattica Bellica','S1'],['Epic Deed','Gesto Epico','S2'],['Tank Shock','Sfondamento corazzato*','S5'],
+ ['Grenade','Granata','S4'],['Incursion (1000 pts)','Incursione*','D2'],['Strike Force (2000 pts)','Forza d’Attacco*','D2'],['Battle-shocked','Traumatizzato','C3'],
+];
+
+/* ======================= LOGICA ======================= */
+const byId = Object.fromEntries(E.map(e=>[e.id,e]));
+const $ = s=>document.querySelector(s);
+const content = $('#content');
+const norm = s=>s.normalize('NFD').replace(/[̀-ͯ]/g,'').toLowerCase();
+const strip = s=>s.replace(/<[^>]+>/g,' ').replace(/\{([A-Z]\d+)\}/g,(m,id)=>byId[id]?(byId[id].en+' '+byId[id].it):'');
+const col = e=>`var(${COLORS[e.id[0]]})`;
+
+let favs = [];
+try{ favs = JSON.parse(localStorage.getItem('cr40k-favs')||'[]'); }catch(_){}
+const saveFavs = ()=>{ try{ localStorage.setItem('cr40k-favs',JSON.stringify(favs)); }catch(_){} };
+
+function refs(html){
+  return html.replace(/\{([A-Z]\d+)\}/g,(m,id)=>{
+    const e = byId[id]; if(!e) return m;
+    return `<button class="ref" data-ref="${id}">${e.en.replace(/^\[|\]$/g,'')}<small>${id}</small></button>`;
+  });
+}
+function itLabel(e){ return e.it + (e.u?'<span class="unoff" title="Traduzione italiana non ufficiale">*</span>':''); }
+function card(e, hl){
+  const fav = favs.includes(e.id);
+  let en = e.en, it = itLabel(e), body = refs(e.b);
+  if(hl){ en = mark(en,hl); it = mark(e.it,hl) + (e.u?'<span class="unoff">*</span>':''); }
+  return `<article class="card" id="card-${e.id}">
+    <div class="code" style="background:${col(e)}">${e.id}</div>
+    <div><h3>${en}${e.cp?` <span class="kw" style="color:var(--brass);font-size:15px">· ${e.cp}</span>`:''}${e.nuovo?'<span class="badge">Novità 11ª</span>':''}</h3><div class="it">${it}</div></div>
+    <button class="star" data-fav="${e.id}" aria-pressed="${fav}" aria-label="${fav?'Togli dai':'Aggiungi ai'} preferiti">${fav?'★':'☆'}</button>
+    <div class="body">${body}</div>
+  </article>`;
+}
+function mark(text,q){
+  const n = norm(text); const i = n.indexOf(q);
+  if(i<0||!q) return text;
+  return text.slice(0,i)+'<mark>'+text.slice(i,i+q.length)+'</mark>'+text.slice(i+q.length);
+}
+function chip(id){ const e=byId[id]; return `<button class="chip" data-ref="${id}"><span class="mini" style="background:${col(e)}">${id}</span>${e.en.replace(/^\[|\]$/g,'')}</button>`; }
+
+function renderNav(active){
+  const groups = [
+    ['Base',['home']],
+    ['Regole di gioco',['turno','comando','movimento','tiro','mischia','terreno','copertura','obiettivi']],
+    ['Keyword',['armi','unita','keyword','strat','lista']],
+    ['Strumenti',['preferiti','glossario']],
+  ];
+  $('#nav').innerHTML = groups.map(([g,ids])=>`<div class="navgroup">${g}</div>`+ids.map(id=>{
+    const s = SECS.find(x=>x.id===id);
+    const n = id==='preferiti'?favs.length:E.filter(e=>e.sec===id).length;
+    const dot = s.c?`<span class="dot" style="background:var(${COLORS[s.c]})"></span>`:'<span class="dot" style="background:var(--side-muted)"></span>';
+    return `<button data-go="${id}" aria-current="${id===active}">${dot}${s.it}${n&&id!=='home'&&id!=='glossario'?`<span class="count">${n}</span>`:''}</button>`;
+  }).join('')).join('');
+}
+
+function renderSection(id){
+  const s = SECS.find(x=>x.id===id) || SECS[0];
+  renderNav(s.id);
+  if(s.id==='home') return renderHome();
+  if(s.id==='glossario') return renderGloss();
+  if(s.id==='preferiti'){
+    const list = favs.map(f=>byId[f]).filter(Boolean);
+    content.innerHTML = head(s) + (list.length? `<div class="cards">${list.map(e=>card(e)).join('')}</div>` :
+      `<div class="empty">Nessun preferito. Tocca la stella ☆ su una scheda per tenerla qui a portata di mano.</div>`);
+    return;
+  }
+  const list = E.filter(e=>e.sec===s.id);
+  let html = head(s);
+  if(s.id==='tiro') html += calcHTML();
+  html += `<div class="cards">${list.map(e=>card(e)).join('')}</div>`;
+  if(s.rel) html += `<div class="related"><h4>Vedi anche</h4><div class="chips">${s.rel.map(chip).join('')}</div></div>`;
+  content.innerHTML = html;
+  if(s.id==='tiro') wireCalc();
+}
+function head(s){
+  const c = s.c?`var(${COLORS[s.c]})`:'var(--brass)';
+  return `<div class="sechead"><h2>${s.it}</h2><span class="en">${s.en}</span></div><div class="rule" style="background:${c}"></div>${s.intro?`<p class="intro">${s.intro}</p>`:''}`;
+}
+
+function renderHome(){
+  const tiles = SECS.filter(s=>!['home'].includes(s.id)).map(s=>{
+    const c = s.c?`var(${COLORS[s.c]})`:'var(--brass)';
+    const n = s.id==='preferiti'?favs.length:E.filter(e=>e.sec===s.id).length;
+    return `<button class="tile" data-go="${s.id}" style="--tc:${c}"><b>${s.it}</b><span>${s.en}${n&&s.id!=='glossario'?` · ${n} voci`:''}</span></button>`;
+  }).join('');
+  content.innerHTML = `<div class="sechead"><h2>Codex Rapido</h2><span class="en">Warhammer 40,000 · 11th edition</span></div>
+  <div class="rule" style="background:var(--brass)"></div>
+  <p class="intro">Cerca qualsiasi regola in italiano o in inglese con la barra in alto, oppure apri una sezione. I nomi sottolineati dentro le schede si aprono al tocco, così controlli una keyword senza perdere il segno.</p>
+  <div class="related" style="margin-top:0"><h4>Le novità 11ª da ricordare</h4><div class="chips">${['C9','C10','C1','C2','D1','A9','C14','D2'].map(chip).join('')}</div></div>
+  <div class="related"><h4>Sezioni</h4><div class="tiles">${tiles}</div></div>
+  <p class="note">Le descrizioni sono riassunti scritti per la consultazione veloce, non il testo ufficiale: in caso di dubbio fanno fede le Core Rules gratuite e l'app Warhammer 40,000. I termini italiani con <b style="color:var(--brass)">*</b> sono traduzioni non ufficiali. Abbreviazioni: PC = Punti Comando · AB/AC = Abilità Balistica / di Combattimento · Fo = Forza · R = Resistenza · VP = Valore di Penetrazione · Sv = Salvezza · Cd = Disciplina · OC = Controllo Obiettivo.</p>`;
+}
+
+/* glossary */
+function glossEntries(){
+  const out=[], seen=new Set();
+  const add=(term,lang,tr,code)=>{ const k=norm(term.replace(/[\[\]*]/g,''))+code; if(seen.has(k))return; seen.add(k); out.push({term,lang,tr,code}); };
+  E.forEach(e=>{ add(e.en,'EN',e.it+(e.u?'*':''),e.id); add(e.it+(e.u?'*':''),'IT',e.en,e.id); });
+  EXTRA_GLOSS.forEach(([en,it,c])=>{ add(en,'EN',it,c); add(it,'IT',en,c); });
+  const key=t=>norm(t.replace(/^[\[]/,''));
+  return out.sort((a,b)=>key(a.term).localeCompare(key(b.term)));
+}
+function renderGloss(){
+  const g = glossEntries();
+  const letters=[...new Set(g.map(x=>norm(x.term.replace(/^\[/,''))[0].toUpperCase()))];
+  let html = head(SECS.find(s=>s.id==='glossario')) + `<p class="intro" style="margin-top:-6px">Ogni voce compare sia col nome inglese (EN) sia con quello italiano (IT). Tocca una riga per aprire la scheda.</p>`;
+  html += `<div class="alpha">${letters.map(l=>`<button data-letter="${l}">${l}</button>`).join('')}</div>`;
+  let cur='';
+  g.forEach(x=>{
+    const L = norm(x.term.replace(/^\[/,''))[0].toUpperCase();
+    if(L!==cur){ cur=L; html+=`<div class="letter" id="L-${L}">${L}</div>`; }
+    const e=byId[x.code];
+    html += `<button class="grow" data-ref="${x.code}"><span class="t">${x.term}</span><span class="l">${x.lang}</span><span class="tr">${x.tr}</span><span class="c"><span class="mini chipcode" style="background:${col(e)};color:#fff;border-radius:999px;font-size:11.5px;font-weight:700;padding:2px 8px">${x.code}</span></span></button>`;
+  });
+  content.innerHTML = html;
+}
+
+/* search */
+function search(qraw){
+  const q = norm(qraw.trim());
+  if(!q){ route(); return; }
+  renderNav('');
+  const words = q.split(/\s+/);
+  const extra = EXTRA_GLOSS.filter(([en,it])=>words.every(w=>norm(en+' '+it).includes(w))).map(x=>x[2]);
+  const scored = E.map(e=>{
+    const title = norm(e.en+' '+e.it+' '+e.id);
+    const body = norm(strip(e.b));
+    if(!words.every(w=>title.includes(w)||body.includes(w)) && !extra.includes(e.id)) return null;
+    let s = 0;
+    words.forEach(w=>{ if(norm(e.en).includes(w)||norm(e.it).includes(w)) s+=10; if(norm(e.id)===w) s+=20; if(body.includes(w)) s+=1; });
+    if(extra.includes(e.id)) s+=5;
+    return {e,s};
+  }).filter(Boolean).sort((a,b)=>b.s-a.s);
+  content.innerHTML = `<div class="sechead"><h2>Risultati</h2><span class="en">“${qraw.replace(/</g,'&lt;')}”</span></div><div class="rule" style="background:var(--brass)"></div>`+
+    (scored.length? `<p class="rescount">${scored.length} ${scored.length===1?'voce trovata':'voci trovate'}</p><div class="cards">${scored.map(x=>card(x.e,q)).join('')}</div>`
+      : `<div class="empty">Nessuna regola trovata per “${qraw.replace(/</g,'&lt;')}”. Prova con il nome inglese o con una parola più corta (es. “cover”, “ferit”, “carica”).</div>`);
+}
+
+/* wound calc */
+function calcHTML(){
+  const opts=(sel)=>Array.from({length:16},(_,i)=>`<option ${i+1===sel?'selected':''}>${i+1}</option>`).join('');
+  return `<div class="calc" aria-label="Calcolatore tiro per ferire">
+    <label for="cS">Forza (Fo / S)<select id="cS">${opts(4)}</select></label>
+    <label for="cT">Resistenza (R / T)<select id="cT">${opts(4)}</select></label>
+    <label for="cAnti">Anti-X sul bersaglio?<select id="cAnti"><option value="0">No</option><option value="2">Anti 2+</option><option value="3">Anti 3+</option><option value="4">Anti 4+</option><option value="5">Anti 5+</option></select></label>
+    <div class="out"><span class="big" id="cRes">4+</span><span class="why" id="cWhy"></span></div>
+    <table class="wtable" id="cTab"></table>
+  </div>`;
+}
+function woundNeed(S,T){ if(S>=2*T)return 2; if(S>T)return 3; if(S===T)return 4; if(S*2<=T)return 6; return 5; }
+function wireCalc(){
+  const upd=()=>{
+    const S=+$('#cS').value, T=+$('#cT').value, anti=+$('#cAnti').value;
+    let n = woundNeed(S,T); let why = `Fo ${S} contro R ${T}`;
+    if(anti && anti<n){ why += ` → con Anti ${anti}+ ogni ${anti}+ naturale è una Ferita Critica, quindi ferisce`; n = anti; }
+    $('#cRes').textContent = n+'+';
+    $('#cWhy').textContent = why + ` · probabilità ${Math.round((7-n)/6*100)}% a dado`;
+    const rows=[['Fo ≥ 2×R',2],['Fo > R',3],['Fo = R',4],['Fo < R',5],['Fo ≤ ½R',6]];
+    const base=woundNeed(S,T);
+    $('#cTab').innerHTML = rows.map(([l,v])=>`<tr class="${v===base?'on':''}"><td>${l}</td><td>${v}+</td></tr>`).join('');
+  };
+  ['#cS','#cT','#cAnti'].forEach(s=>$(s).addEventListener('change',upd)); upd();
+}
+
+/* sheet */
+function openSheet(id){
+  const e=byId[id]; if(!e) return;
+  const s=SECS.find(x=>x.id===e.sec);
+  $('#sheet').innerHTML = `<div class="grab"></div>${card(e)}<div class="acts"><button class="btn" id="sClose">Chiudi</button><button class="btn primary" data-go="${e.sec}" data-flash="${e.id}">Apri in “${s.it}”</button></div>`;
+  document.body.classList.add('open');
+  $('#sClose').focus();
+}
+function closeSheet(){ document.body.classList.remove('open'); }
+
+/* routing */
+function route(){
+  const h = location.hash.replace('#','');
+  renderSection(SECS.some(s=>s.id===h)?h:'home');
+}
+function go(id, flash){
+  closeSheet(); document.body.classList.remove('drawer-open');
+  $('#q').value=''; $('#clear').style.display='none';
+  if(location.hash.replace('#','')===id) route(); else location.hash = id;
+  $('#main').scrollTop = 0;
+  if(flash) setTimeout(()=>{ const c=document.getElementById('card-'+flash); if(c){ c.scrollIntoView({block:'center'}); c.classList.add('flash'); setTimeout(()=>c.classList.remove('flash'),1600);} },60);
+}
+
+document.addEventListener('click',ev=>{
+  const t = ev.target.closest('[data-go],[data-ref],[data-fav],[data-letter],[data-th],#sClose,#scrim,#dscrim,#menubtn,#clear');
+  if(!t) return;
+  if(t.dataset.go){ go(t.dataset.go, t.dataset.flash); return; }
+  if(t.dataset.ref){ openSheet(t.dataset.ref); return; }
+  if(t.dataset.fav){
+    const id=t.dataset.fav; favs = favs.includes(id)?favs.filter(x=>x!==id):[...favs,id]; saveFavs();
+    document.querySelectorAll(`[data-fav="${id}"]`).forEach(b=>{ const on=favs.includes(id); b.setAttribute('aria-pressed',on); b.textContent=on?'★':'☆'; });
+    renderNav(location.hash.replace('#','')||'home');
+    if(location.hash==='#preferiti' && !document.body.classList.contains('open') && !$('#q').value) route();
+    return;
+  }
+  if(t.dataset.letter){ const el=document.getElementById('L-'+t.dataset.letter); if(el){ $('#main').scrollTop = el.offsetTop - 130; } return; }
+  if(t.dataset.th){ setTheme(t.dataset.th); return; }
+  if(t.id==='sClose'||t.id==='scrim'){ closeSheet(); return; }
+  if(t.id==='menubtn'){ document.body.classList.add('drawer-open'); return; }
+  if(t.id==='dscrim'){ document.body.classList.remove('drawer-open'); return; }
+  if(t.id==='clear'){ $('#q').value=''; t.style.display='none'; route(); $('#q').focus(); }
+});
+document.addEventListener('keydown',e=>{ if(e.key==='Escape'){ closeSheet(); document.body.classList.remove('drawer-open'); } });
+let timer;
+$('#q').addEventListener('input',e=>{ $('#clear').style.display=e.target.value?'block':'none'; clearTimeout(timer); timer=setTimeout(()=>{search(e.target.value); $('#main').scrollTop=0;},120); });
+window.addEventListener('hashchange',()=>{ if(!$('#q').value) route(); });
+
+function setTheme(th){
+  const r=document.documentElement;
+  if(th==='auto'){ if(r.dataset.userTheme){ r.removeAttribute('data-theme'); delete r.dataset.userTheme; } }
+  else { r.setAttribute('data-theme',th); r.dataset.userTheme='1'; }
+  document.querySelectorAll('[data-th]').forEach(b=>b.setAttribute('aria-pressed', b.dataset.th===th));
+  try{ localStorage.setItem('cr40k-theme',th); }catch(_){}
+}
+let th='auto'; try{ th=localStorage.getItem('cr40k-theme')||'auto'; }catch(_){}
+setTheme(th);
+route();
+if('serviceWorker' in navigator){ try{ navigator.serviceWorker.register('sw.js').catch(()=>{}); }catch(_){} }
+</script>
+</body>
+</html>
